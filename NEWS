@@ -9,6 +9,9 @@ Changes in version 3.1
 - relay-ctrl-allow now communicates the $USER and $DOMAIN variables to
   relay-ctrl-check.
 
+- Added a relay-ctrl-chdir program, to open a directory so the
+  relay-ctrl-* programs can inherit the opened FD to fchdir.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------

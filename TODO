@@ -6,16 +6,6 @@ relay-ctrl-allow:
 
 - Document need for relay-ctrl-chdir
 
-relay-ctrl-chdir:
-
-- New program
-
-- chdir to $RELAY_CTRL_DIR and open(".", O_RDONLY)
-
-- Set $RELAY_CTRL_DIR_FD to the FD number of the open
-
-- Exec the command line.
-
 relay-ctrl-check:
 
 - If $RELAY_CTRL_DIR_FD is set, fchdir to it.
