@@ -27,14 +27,16 @@ How to configure it for use:
 - Make sure the configuration defaults are appropriate for your system.
   See the man pages.
 
-- Create the /var/spool/relay-ctrl directory (or wherever you want the
-  files to go)
+- Create the /var/spool/relay-ctrl/allow directory (or wherever you want
+  the files to go).  Set the permissions on /var/spool/relay-ctrl to
+  mode 700 (writeable only to root), and /var/spool/relay-ctrl/allow to
+  mode 777 (world writeable)
 
 - Create the /etc/relay-ctrl directory (or wherever you want the
   configuration to go)
 
-- Put "/var/spool/relay-ctrl" into the first line of "RELAY_CTRL_DIR" in
-  the above configuration directory.
+- Put "/var/spool/relay-ctrl/allow" into the first line of
+  "RELAY_CTRL_DIR" in the above configuration directory.
 
 - If you want to have a fixup address (see the qmail FAQ) inserted into
   the RELAYCLIENT setting, put it into the first line of
@@ -45,11 +47,14 @@ How to configure it for use:
   recent version of vixie cron.  Other versions of cron may use
   different syntax, and you may need to edit root's crontab.
 * * * * * root envdir /etc/relay-ctrl /usr/sbin/relay-ctrl-age
+  This step is optional, as relay-ctrl-check will delete and ignore old
+  IP files.
 
 - Modify your qmail-smtpd run file from:
 	tcpserver ... qmail-smtpd
   to:
   	envdir /etc/relay-ctrl \
+	relay-ctrl-chdir \
 	tcpserver ... relay-ctrl-check qmail-smtpd
 
 How to use with qmail-pop3d:
@@ -59,8 +64,10 @@ How to use with qmail-pop3d:
 	qmail-pop3d
   to:
   	envdir /etc/relay-ctrl \
+	relay-ctrl-chdir \
 	tcpserver ... qmail-popup hostname checkpassword \
-	relay-ctrl-allow qmail-pop3d
+	relay-ctrl-allow \
+	qmail-pop3d
 
 How to use with pop3front
 
@@ -68,7 +75,10 @@ How to use with pop3front
   	tcpserver ... pop3front-auth cvm pop3front-maildir
   to:
   	envdir /etc/relay-ctrl \
-	tcpserver ... pop3front-auth cvm relay-ctrl-allow pop3front-maildir
+	relay-ctrl-chdir \
+	tcpserver ... pop3front-auth cvm \
+	relay-ctrl-allow \
+	pop3front-maildir
 
 How to use with Courier IMAP:
 
@@ -80,8 +90,8 @@ How to use with Courier IMAP:
   /usr/lib/courier-imap/etc/imapd.
 
 - You also need to modify the run file to execute
-  "envdir /etc/relay-ctrl" before starting couriertcpd, and I'm unsure
-  where this needs to go.
+  "envdir /etc/relay-ctrl relay-ctrl-chdir" before starting couriertcpd,
+  and I'm unsure where this needs to go.
 
 This program is Copyright(C) 1999-2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
