@@ -1,8 +1,8 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
-Version 2.5
-2000-10-06
+Version 3.0
+2001-12-17
 
 This pair of programs controls access to relaying for users that
 authenticate using either POP3 using the qmail-popup/qmail-pop3d
@@ -10,60 +10,80 @@ servers, or IMAP using Courier IMAP.
 
 Requirements:
 
-- You must be using qmail-popup/qmail-pop3d with either tcpserver or
-  tcp-env to serve POP3 OR
+- You must be using either qmail-popup/qmail-pop3d or pop3front
+  with either tcpserver or tcp-env to serve POP3 OR
 - You must be using Courier IMAP to serve IMAP.
-- You must be using tcpserver with qmail-smtpd to serve SMTP.
+- You must be using tcpserver with qmail-smtpd or smtpfront to serve
+  SMTP.
 
 How to install:
 
-- Check the definitions in defines.h.  The default settings are
-  appropriate for installing relay-ctrl under /usr instead of
-  /usr/local.
-- Check the Makefile for appropriate values for your compiler and
-  linker, and installation paths.
+- Check the definitions in the conf-* files.
 - Run "make"
-- As root, run "make root-install"
+- As root, run "./installer"
 
 How to configure it for use:
 
 - Make sure the configuration defaults are appropriate for your system.
-  See the man page for relay-ctrl-age.
+  See the man pages.
+
 - Create the /var/spool/relay-ctrl directory (or wherever you want the
-  files to go, based on the previous step).
+  files to go)
+
+- Create the /etc/relay-ctrl directory (or wherever you want the
+  configuration to go)
+
+- Put "/var/spool/relay-ctrl" into the first line of "RELAY_CTRL_DIR" in
+  the above configuration directory.
+
 - If you want to have a fixup address (see the qmail FAQ) inserted into
   the RELAYCLIENT setting, put it into the first line of
-  "relayclient" in the config directory as folows:
+  "RELAY_CTRL_RELAYCLIENT" in the configuration directory:
   :allow,RELAYCLIENT='@fixup'
+
 - Add the following line to a file in /etc/cron.d.  This assumes a
   recent version of vixie cron.  Other versions of cron may use
   different syntax, and you may need to edit root's crontab.
-* * * * * /usr/sbin/relay-ctrl-age
+* * * * * root envdir /etc/relay-ctrl /usr/sbin/relay-ctrl-age
+
+- Modify your qmail-smtpd run file from:
+	tcpserver ... qmail-smtpd
+  to:
+  	envdir /etc/relay-ctrl \
+	tcpserver ... relay-ctrl-check qmail-smtpd
 
 How to use with qmail-pop3d:
 
-- Insert the program "relay-ctrl-allow" between your checkpassword
-  program and qmail-pop3d in your invocation of tcpserver for the POP
-  service.
+- Change your run file from:
+  	tcpserver ... qmail-popup hostname checkpassword \
+	qmail-pop3d
+  to:
+  	envdir /etc/relay-ctrl \
+	tcpserver ... qmail-popup hostname checkpassword \
+	relay-ctrl-allow qmail-pop3d
+
+How to use with pop3front
+
+- Change your run file from:
+  	tcpserver ... pop3front-auth hostname checkpassword \
+	pop3front-maildir
+  to:
+  	envdir /etc/relay-ctrl \
+	tcpserver ... pop3front-auth hostname checkpassword \
+	relay-ctrl-allow pop3front-maildir
 
 How to use with Courier IMAP:
 
 - Make a symlink in /usr/lib/courier-imap/libexec/authlib to
   /usr/sbin/relay-ctrl-allow.
+
 - Insert the command relay-ctrl-allow at the end of the list of
-  authentication modules (AUTHMODULES) in etc/imapd.config.
+  authentication modules (AUTHMODULES) in
+  /usr/lib/courier-imap/etc/imapd.
 
-Operation:
-
-- relay-ctrl-age records IPs in /var/spool/relay-ctrl, checks all
-  previously recorded addresses, and removes any that have not been
-  updated for at least 15 minutes.  It then lists all of the addresses
-  through a pipe to tcprules to build the control database for the smtp
-  server.
-
-- relay-ctrl-allow checks the environment for the remote IP from which
-  the connection is originating.  It runs relay-ctrl-age to ensure that
-  it is recorded in the control tables.
+- You also need to modify the run file to execute
+  "envdir /etc/relay-ctrl" before starting couriertcpd, and I'm unsure
+  where this needs to go.
 
 This program is Copyright(C) 1999-2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later

@@ -11,6 +11,8 @@ Changes in version 3.0
 
 - Running relay-ctrl-age is no longer *required*, but still recommended.
 
+- The RPM no longer tries to add itself to any qmail control files.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
