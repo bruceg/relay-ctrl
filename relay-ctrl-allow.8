@@ -11,12 +11,22 @@ relay-ctrl-allow \- selectively enable SMTP relaying
 .B relay-ctrl-allow
 looks up the client's IP address from
 .I $TCPREMOTEIP
-and adds it to the directory specified by
+and adds it to the directory specified by either
+.I $RELAY_CTRL_DIR_FD
+(set by
+.BR relay-ctrl-chdir )
+or
 .I $RELAY_CTRL_DIR
 if the client was authenticated by the server program.
-It then drops
-all setuid priviledges and executes the command named on the command
-line.
+It writes the value of the
+.I $USER
+and
+.I $DOMAIN
+variables into that file, if they are set, so that
+.B relay-ctrl-check
+can export them back into the environment.
+It then drops all setuid priviledges and executes the
+command named on the command line.
 .P
 If
 .I $AUTHUSER
@@ -43,8 +53,8 @@ qmail-pop3d(8),
 qmail-popup(8),
 tcpserver(1),
 tcp-environ(5)
-.SH WARNINGS
-.B relay-ctrl-allow
-will normally need to be installed setuid to whatever user owns the
-relay client rules directory (frequently root), as it will be executed
-without permissions to modify either.
+.SH NOTES
+If
+.I $RELAY_CTRL_DIR_FD
+is set, the IP files are created with permissions set to world
+writeable so that they may be overwritten.
