@@ -1,5 +1,14 @@
+2000-06-14  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
+
+	* relay-ctrl-allow.c (main): Require that UID and GID are
+	non-zero.  
+	(main): Handle a "--courier-imap" option to make it act like a
+	trivial Courier IMAP authentication module.
+
 2000-03-15  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
 
+	* Released version 1.4
+	
 	* relay-ctrl-age.c (child): Added a "umask" call to force tcprules
 	to create a world-readable CDB file.
 

@@ -7,11 +7,12 @@ install	= /usr/bin/install
 installdata = $(install) -m 644
 installbin = $(install) -m 755
 installdir = $(install) -d
+chmod	= chmod
 
 progs	= relay-ctrl-allow relay-ctrl-age
 
 PACKAGE = relay-ctrl
-VERSION	= 1.4
+VERSION	= 2.0
 distdir = $(PACKAGE)-$(VERSION)
 
 CC	= gcc
@@ -46,9 +47,9 @@ rpmdir	= $(HOME)/redhat
 
 dist: relay-ctrl.spec Makefile
 	mkdir $(distdir)
-	cp *.c *.h *.8 *.spec COPYING ChangeLog README Makefile YEAR2000 \
+	cp *.c *.h *.8 *.spec COPYING ChangeLog README Makefile NEWS YEAR2000 \
 		$(distdir)
-	tar -czvf $(distdir).tar.gz $(distdir)
+	tar -czf $(distdir).tar.gz $(distdir)
 	rm -rf $(distdir)
 
 rpms: dist

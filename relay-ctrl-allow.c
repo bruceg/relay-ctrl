@@ -35,6 +35,21 @@ void run_age_cmd()
   }
 }
 
+void authenticated(const char* tcpremoteip)
+{
+  char* filename = malloc(strlen(SPOOLDIR)+strlen(tcpremoteip)+2);
+  strcpy(filename, SPOOLDIR);
+  strcat(filename, "/");
+  strcat(filename, tcpremoteip);
+  touch(filename);
+  run_age_cmd();
+  
+  /* Since this program will be either setuid or setgid,
+     revoke our priviledges now. */
+  setgid(getgid());
+  setuid(getuid());
+}
+
 size_t writestr(int fd, const char* msg)
 {
   return write(fd, msg, strlen(msg));
@@ -43,7 +58,8 @@ size_t writestr(int fd, const char* msg)
 int validate(const char* str) 
 {
   /* Security by obscurity -- do certain simple checks on the remote
-     IP string and require that both stdin and stdout are sockets. */
+     IP string and require that both stdin and stdout are sockets.
+     Also require that UID and GID are non-zero. */
   struct stat statbuf;
   const char* ptr;
   /* Ensure that the IP string contains only digits and periods. */
@@ -59,28 +75,45 @@ int validate(const char* str)
   return 1;
 }
 
+enum { imap, pop3 } authmode;
+
 int main(int argc, char* argv[])
 {
+  struct stat statbuf;
   const char* tcpremoteip = getenv("TCPREMOTEIP");
   if(!tcpremoteip || !validate(tcpremoteip)) {
     writestr(2,
 	     "Error: relay-ctrl-allow must be run from tcp-env or tcpserver");
     return 111;
-  } else {
-    char* filename = malloc(strlen(SPOOLDIR)+strlen(tcpremoteip)+2);
-    strcpy(filename, SPOOLDIR);
-    strcat(filename, "/");
-    strcat(filename, tcpremoteip);
-    touch(filename);
-    run_age_cmd();
-  
-    /* Since this program will be either setuid or setgid,
-       revoke our priviledges now. */
-    setgid(getgid());
-    setuid(getuid());
-    
-    /* Run the program listed on the command line. */
-    execvp(argv[1], argv+1);
+  }
+  if(getuid() == 0 || getgid() == 0) {
+    writestr(2,
+	     "Error: relay-ctrl-allow cannot be run as root");
     return 111;
   }
+
+  /* Check command-line arguments */
+  if(argc < 2) {
+    writestr(2, "Error: too few command-line arguments to relay-ctrl-allow");
+    writestr(2, "usage: relay-ctrl-allow program args...");
+    return 111;
+  }
+
+  /* Auto-detect the type of program running relay-ctrl-allow */
+  if(getenv("AUTHUSER") && getenv("AUTHARGV0") && fstat(3, &statbuf) != -1)
+    authmode = imap;
+  else
+    authmode = pop3;
+  
+  switch(authmode) {
+  case imap: 
+      if(getenv("AUTHENTICATED"))
+	authenticated(tcpremoteip);
+      break;
+  case pop3:
+    authenticated(tcpremoteip);
+    break;
+  }
+  execvp(argv[1], argv+1);
+  return 111;
 }

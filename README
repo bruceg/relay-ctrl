@@ -1,12 +1,12 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
-Version 1.4
-March 15, 2000
+Version 2.0
+June 15, 2000
 
 This pair of programs controls access to relaying for users that
-authenticate using checkpassword.  At this time, this means POP3 using
-the qmail-popup/qmail-pop3d servers.
+authenticate using checkpassword.  At this time, this means either POP3
+using the qmail-popup/qmail-pop3d servers, or IMAP using Courier IMAP.
 
 Requirements:
 
@@ -32,13 +32,23 @@ How to use:
 - If you want to have a fixup address (see the qmail FAQ) inserted into
   the RELAYCLIENT setting, put it into the first line of "smtp.fixup" in
   the directory RULESDIR (defaults to "/etc/tcpcontrol").
-- Insert the program "relay-ctrl-allow" between your checkpassword
-  program and qmail-pop3d in your invocation of tcpserver for the POP
-  service.
 - Add the following line to the root crontab.  This assumes a recent
   version of vixie cron.  Other versions of cron will use a similar
   syntax.
 0-59/5 * * * * /usr/sbin/relay-ctrl-age
+
+How to use with qmail-pop3d:
+
+- Insert the program "relay-ctrl-allow" between your checkpassword
+  program and qmail-pop3d in your invocation of tcpserver for the POP
+  service.
+
+How to use with Courier IMAP:
+
+- Make a symlink in /usr/lib/courier-imap/libexec/authlib to
+  /usr/sbin/relay-ctrl-allow.
+- Insert the command relay-ctrl-allow at the end of the list of
+  authentication modules (AUTHMODULES) in etc/imapd.config.
 
 Operation:
 
@@ -48,7 +58,7 @@ Operation:
   pipe to tcprules to build the control database for the smtp server.
 
 - relay-ctrl-allow checks the environment for the remote IP from which
-  the POP connection is originating.  It records that number in the
+  the connection is originating.  It records that number in the
   directory /var/spool/relay-ctrl, and runs relay-ctrl-age to ensure
   that it is recorded in the control tables.
 
