@@ -1,4 +1,19 @@
 -------------------------------------------------------------------------------
+Changes in version 3.0
+
+- Removed all CDB management code in favour of doing the check in a new
+  program, relay-ctrl-check, which is a front-end to qmail-smtpd.
+
+- Added a client-server pair for transmitting relay authorization
+  information over UDP.
+
+- All configuration information is now read from environment variables.
+
+- Running relay-ctrl-age is no longer *required*, but still recommended.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 2.5
 
 - Replaced most of the defines with run-time config files.  See the man
