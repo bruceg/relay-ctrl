@@ -6,8 +6,6 @@ relay-ctrl-allow:
 
 - Document need for relay-ctrl-chdir
 
-- Save the values of $USER and $DOMAIN in the created file.
-
 relay-ctrl-chdir:
 
 - New program

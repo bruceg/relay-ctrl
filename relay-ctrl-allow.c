@@ -1,8 +1,10 @@
+#include <sys/types.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <utime.h>
 #include "msg/msg.h"
 #include "relay-ctrl.h"
 
@@ -11,10 +13,26 @@ const int msg_show_pid = 1;
 static const char* ip;
 static const char* dir;
 
+static int write_env(int fd, const char* var)
+{
+  const char* env;
+  int len;
+  if ((env = getenv(var)) != 0) {
+    len = strlen(var);
+    if (write(fd, var, len) != len) return 0;
+    if (write(fd, "=", 1) != 1) return 0;
+    len = strlen(env) + 1;
+    if (write(fd, env, len) != len) return 0;
+  }
+  return 1;
+}
+
 static void make_file(const char* filename)
 {
   int cwd;
-
+  int fd;
+  int error;
+  
   if ((cwd = open(".", O_RDONLY)) == -1) {
     warn1("Could not open current directory.");
     return;
@@ -23,8 +41,19 @@ static void make_file(const char* filename)
     warn3("Could not change directory to '", dir, "'.");
     return;
   }
-  if (!touch(filename))
-    warn3sys("Could not toucn '", filename, "'");
+  if ((fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0666)) == -1)
+    warn3sys("Could not open '", filename, "' for writing");
+  else {
+    error = 0;
+    if (!write_env(fd, "USER") ||
+	!write_env(fd, "DOMAIN") ||
+	close(fd) == -1) {
+      warn3sys("Could not write to '", filename, "'");
+      close(fd);
+    }
+    else
+      utime(filename, 0);
+  }
   if (fchdir(cwd) == -1)
     die1(111, "Could not change back to start directory.");
 }
