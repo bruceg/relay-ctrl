@@ -10,8 +10,8 @@
 
 const char program[] = "relay-ctrl-send";
 const int msg_show_pid = 1;
-static const char* ip;
-static long iplen;
+static char packet[512];
+static long packetlen;
 static long tries;
 static long timeout;
 static unsigned short port;
@@ -33,7 +33,6 @@ static struct remote* parse_remotes(char* str)
   remote = strtok(str, ",");
   while (remote != 0) {
     struct remote* nr;
-    const char* ptr;
     if ((nr = malloc(sizeof *nr)) == 0)
       die1(111, "Could not allocate remote structure.");
     nr->next = remotes;
@@ -53,7 +52,8 @@ static void send_one(struct remote* remote, int sock)
 {
   for (; remote != 0; remote = remote->next)
     if (!remote->rcvd)
-      if (socket_send4(sock, ip, iplen, remote->addr, remote->port) != iplen)
+      if (socket_send4(sock, packet, packetlen,
+		       remote->addr, remote->port) != packetlen)
 	warn3("Sending IP to '", ipv4_format(remote->addr), "' failed.");
 }
 
@@ -93,7 +93,6 @@ static void send_ip(char* str)
   if (socket_bind4(sock, IPV4ADDR_ANY, 0) == -1)
     die1(111, "Could not bind UDP socket.");
 
-  iplen = strlen(ip);
   for (; tries > 0; --tries) {
     send_one(remotes, sock);
     if (recv_wait(remotes, sock)) break;
@@ -104,15 +103,26 @@ static void send_ip(char* str)
 	    ipv4_format(r->addr), "'.");
 }
 
+int make_packet(const char* ip)
+{
+  if ((packetlen = strlen(ip)) > (long)sizeof packet) return 0;
+  memcpy(packet, ip, packetlen);
+  return 1;
+}
+
 int main(int argc, char* argv[])
 {
   char* remotes;
   const char* tmp;
 
   if (argc < 2) die1(111, "usage: relay-ctrl-send program [args ...]");
-  if ((ip = getenv("TCPREMOTEIP")) == 0 || (ip = validate_ip(ip)) == 0)
+  if ((tmp = getenv("TCPREMOTEIP")) == 0 || (tmp = validate_ip(tmp)) == 0)
     die1(111, "Must be run from tcp-env or tcpserver.");
-
+  if (!make_packet(tmp))
+    die1(111, "Failed to build packet data");
+  strcpy(packet, tmp);
+  packetlen = strlen(packet);
+  
   port = 0;
   if ((tmp = getenv("RELAY_CTRL_PORT")) != 0) port = atoi(tmp);
   if (port <= 0) port = DEFAULT_PORT;
