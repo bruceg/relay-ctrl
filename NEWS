@@ -10,7 +10,8 @@ Changes in version 3.1
   updated.
 
 - Added a relay-ctrl-chdir program, to open a directory so the
-  relay-ctrl-* programs can inherit the opened FD to fchdir.
+  relay-ctrl-* programs can inherit the opened FD to fchdir.  This
+  allows all the programs to be executed non-setuid.
 
 - Various portability bugs fixed in the libraries.
 

@@ -78,13 +78,8 @@ int main(int argc, char* argv[])
   if ((dir = getenv("RELAY_CTRL_DIR")) == 0)
     warn1("$RELAY_CTRL_DIR is not set.");
   else
-    if (is_authenticated()) {
+    if (is_authenticated())
       make_file(ip);
-      /* Since this program will be either setuid or setgid,
-	 revoke our priviledges now. */
-      setgid(getgid());
-      setuid(getuid());
-    }
 
   if (argc > 1) {
     execvp(argv[1], argv+1);
