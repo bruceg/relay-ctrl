@@ -1,4 +1,14 @@
 -------------------------------------------------------------------------------
+Changes in version 3.1
+
+- Modified the function that creates IP files to also call utime to make
+  sure the last-modified timestamp is for sure updated.
+
+- Various portability bugs fixed in the libraries.
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 3.0
 
 - Removed all CDB management code in favour of doing the check in a new

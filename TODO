@@ -2,9 +2,25 @@ relay-ctrl-age:
 
 relay-ctrl-allow:
 
+- If $RELAY_CTRL_DIR_FD is set, fchdir to it and set umask to 0.
+
+- Document need for relay-ctrl-chdir
+
 - Save the values of $USER and $DOMAIN in the created file.
 
+relay-ctrl-chdir:
+
+- New program
+
+- chdir to $RELAY_CTRL_DIR and open(".", O_RDONLY)
+
+- Set $RELAY_CTRL_DIR_FD to the FD number of the open
+
+- Exec the command line.
+
 relay-ctrl-check:
+
+- If $RELAY_CTRL_DIR_FD is set, fchdir to it.
 
 - Add any environment variables contained in the created file to the
   environment.
@@ -13,9 +29,15 @@ relay-ctrl-send:
 
 - Modify the protocol to send $USER and $DOMAIN.
 
+- Modify the protocol to send a timestamp and a cryptographic signature
+  of all the rest of the packet + a secret.
+
 relay-ctrl-udp:
 
 - Save the sent environment variables into the file.
 
 - Restrict the set of allowed senders, using directory entries to
   enumerate the IPs.
+
+- Check the signatures of incoming packets.  Store signatures for
+  seperate servers seperately.
