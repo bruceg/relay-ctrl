@@ -44,17 +44,24 @@ const char* read_line(const char* filename)
   return copy;
 }
 
+void read_str(const char** config, const char* filename)
+{
+  const char* tmp = read_line(filename);
+  if(tmp)
+    *config = tmp;
+}
+
 int read_config(void)
 {
   const char* tmp;
   if(chdir(CONFIGDIR))
     return 0;
-  if((tmp = read_line("rule")) != 0)
-    relayclient = tmp;
-  if((tmp = read_line("tcprules")) != 0)
-    tcprules = tmp;
-  if((tmp = read_line("spooldir")) != 0)
-    spooldir = tmp;
+  read_str(&relayclient, "rule");
+  read_str(&tcprules, "tcprules");
+  read_str(&spooldir, "spooldir");
+  read_str(&smtprules, "smtprules");
+  read_str(&smtpcdb, "smtpcdb");
+  read_str(&rulesdir, "rulesdir");
   if((tmp = read_line("expiry")) != 0) {
     char* end;
     expiry = strtol(tmp, &end, 10);
