@@ -17,7 +17,7 @@ int main(void)
   int sock;
   unsigned short port;
 
-  if (!do_chdir) return 111;
+  if (!do_chdir()) return 111;
   
   port = 0;
   if ((tmp = getenv("RELAY_CTRL_PORT")) != 0) port = atoi(tmp);
@@ -37,9 +37,12 @@ int main(void)
       buffer[len] = 0;
       if ((ip = validate_ip(buffer)) == 0)
 	warn3("Invalid IP from '", ipv4_format(addr), "'.");
-      else
+      else {
 	if (!touch(ip))
 	  warn3sys("Could not touch '", ip, "'");
+	buffer[0] = 1;
+	socket_send4(sock, buffer, 1, addr, port);
+      }
     }
   }
   return 0;
