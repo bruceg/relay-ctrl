@@ -1,6 +1,6 @@
 .TH relay-ctrl-allow 8
 .SH NAME
-relay-ctrl-allow \- selectively enable smtp relaying
+relay-ctrl-allow \- selectively enable SMTP relaying
 .SH SYNOPSIS
 .B relay-ctrl-allow
 .I command
@@ -9,30 +9,36 @@ relay-ctrl-allow \- selectively enable smtp relaying
 ]
 .SH DESCRIPTION
 .B relay-ctrl-allow
-executes
-.B relay-ctrl-age
-in the background to add a record of the client's IP to the table used
-by
-.B tcpserver
-to control relaying.
-It then drops all setuid priviledges and executes the command named on
-the command line.
-.SH OPTIONS
-.TP
-.B command
-This argument is executed after the IP address has been added to the
-spool of addresses.
+looks up the client's IP address from
+.I $TCPREMOTEIP
+and adds it to the directory specified by
+.I $RELAY_CTRL_DIR
+if the client was authenticated by the server program.
+It then drops
+all setuid priviledges and executes the command named on the command
+line.
+.P
+If
+.I $AUTHUSER
+and
+.I $AUTHARGV0
+are set, the invoker is determined to be either Courier IMAP or
+Courier POP3, and
+.B relay-ctrl-allow
+checks the environment for
+.I $AUTHENTICATED
+to determine if authentication succeeded.
+Otherwise, the invoker is determined to be either
+.B qmail-popup
+or
+.B pop3front-auth
+(or similar) and authentication has succeeded.
 .SH "RETURN VALUES"
 Returns 111 (temporary failure) if any operation fails; otherwise the
 exit value is that of the executed program.
-.SH ENVIRONMENT
-.TP
-.B TCPREMOTEIP
-.B relay-ctrl-allow
-expects that this environment variable is set to the numerical IP
-address of the remote host.
 .SH "SEE ALSO"
 relay-ctrl-age(8),
+relay-ctrl-check(8),
 qmail-pop3d(8),
 qmail-popup(8),
 tcpserver(1),
@@ -40,7 +46,5 @@ tcp-environ(5)
 .SH WARNINGS
 .B relay-ctrl-allow
 will normally need to be installed setuid to whatever user owns the
-SMTP rules CDB used by
-.B tcpserver
-and the relay client rules directory (frequently root), as it will be
-executed without permissions to modify either.
+relay client rules directory (frequently root), as it will be executed
+without permissions to modify either.

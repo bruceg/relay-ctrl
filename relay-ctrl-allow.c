@@ -1,107 +1,55 @@
-#include <ctype.h>
-#include <stdio.h>
+#include <fcntl.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "msg/msg.h"
+#include "relay-ctrl.h"
 
-#include "defines.h"
+const char program[] = "relay-ctrl-allow";
+const int msg_show_pid = 1;
+static const char* ip;
+static const char* dir;
 
-void run_age_cmd(const char* remoteip)
+static void make_file(const char* filename)
 {
-  pid_t pid = fork();
-  if(pid == 0) {
-    const char* devnul = "/dev/null";
-    close(0);
-    close(1);
-    close(2);
-    open(devnul, O_RDONLY); /* fd 0 */
-    open(devnul, O_WRONLY); /* fd 1 */
-    open(devnul, O_WRONLY); /* fd 2 */
-    execl(AGE_CMD, AGE_CMD, remoteip, 0);
-    exit(111);
-  } else if(pid < 0) {
-    perror("fork");
-    exit(111);
+  int cwd;
+  int fd;
+
+  if ((cwd = open(".", O_RDONLY)) == -1) {
+    warn1("Could not open current directory.");
+    return;
   }
-}
-
-void authenticated(const char* tcpremoteip)
-{
-  run_age_cmd(tcpremoteip);
-  
-  /* Since this program will be either setuid or setgid,
-     revoke our priviledges now. */
-  setgid(getgid());
-  setuid(getuid());
-}
-
-size_t writestr(int fd, const char* msg)
-{
-  return write(fd, msg, strlen(msg));
-}
-  
-const char* validate(const char* str)
-{
-  /* Security by obscurity -- do certain simple checks on the remote
-     IP string and require that both stdin and stdout are sockets.
-     Also require that UID and GID are non-zero. */
-  const char* ptr;
-
-  /* Skip over a IPv6 address prefix inserted by couriertcpd */
-  if(!strncmp(str, "::ffff:", 7))
-    str += 7;
-  
-  /* Ensure that the IP string contains only digits and periods. */
-  for(ptr = str; *ptr != 0; ptr++) {
-    char ch = *ptr;
-    if(ch != '.' && !isdigit(ch))
-      return 0;
+  if (chdir(dir) == -1) {
+    warn3("Could not change directory to '", dir, "'.");
+    return;
   }
-  return str;
+  if ((fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0666)) == -1)
+    warn3("Could not create '", filename, "'.");
+  else
+    close(fd);
+  if (fchdir(cwd) == -1)
+    die1(111, "Could not change back to start directory.");
 }
-
-enum { imap, pop3 } authmode;
 
 int main(int argc, char* argv[])
 {
-  struct stat statbuf;
-  const char* tcpremoteip = getenv("TCPREMOTEIP");
-  if(!tcpremoteip || !(tcpremoteip = validate(tcpremoteip))) {
-    writestr(2,
-	     "Error: relay-ctrl-allow must be run from tcp-env or tcpserver");
-    return 111;
-  }
-  if(getuid() == 0 || getgid() == 0) {
-    writestr(2,
-	     "Error: relay-ctrl-allow cannot be run as root");
-    return 111;
-  }
-
-  /* Check command-line arguments */
-  if(argc < 2) {
-    writestr(2, "Error: too few command-line arguments to relay-ctrl-allow");
-    writestr(2, "usage: relay-ctrl-allow program args...");
-    return 111;
-  }
-
-  /* Auto-detect the type of program running relay-ctrl-allow */
-  if(getenv("AUTHUSER") && getenv("AUTHARGV0") && fstat(3, &statbuf) != -1)
-    authmode = imap;
+  if ((ip = getenv("TCPREMOTEIP")) == 0 || (ip = validate_ip(ip)) == 0)
+    die1(111, "Must be run from tcp-env or tcpserver.");
+  if ((dir = getenv("RELAY_CTRL_DIR")) == 0)
+    warn1("$RELAY_CTRL_DIR is not set.");
   else
-    authmode = pop3;
-  
-  switch(authmode) {
-  case imap: 
-      if(getenv("AUTHENTICATED"))
-	authenticated(tcpremoteip);
-      break;
-  case pop3:
-    authenticated(tcpremoteip);
-    break;
+    if (is_authenticated()) {
+      make_file(ip);
+      /* Since this program will be either setuid or setgid,
+	 revoke our priviledges now. */
+      setgid(getgid());
+      setuid(getuid());
+    }
+
+  if (argc > 1) {
+    execvp(argv[1], argv+1);
+    return 111;
   }
-  execvp(argv[1], argv+1);
-  return 111;
+  return 0;
 }
