@@ -25,10 +25,12 @@ How to install:
 - Run "make"
 - As root, run "make root-install"
 
-How to use:
+How to configure it for use:
 
 - Make sure the configuration defaults are appropriate for your system.
   See the man page for relay-ctrl-age.
+- Create the /var/spool/relay-ctrl directory (or wherever you want the
+  files to go, based on the previous step).
 - If you want to have a fixup address (see the qmail FAQ) inserted into
   the RELAYCLIENT setting, put it into the first line of
   "relayclient" in the config directory as folows:
