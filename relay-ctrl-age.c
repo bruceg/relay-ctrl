@@ -166,6 +166,9 @@ char* pathjoinuniq(const char* part1, const char* part2)
   return str;
 }
 
+static char* cdb_filename;
+static char* tmp_filename;
+
 int child(int fdin, int fdout)
 {
   umask(022);
@@ -173,9 +176,7 @@ int child(int fdin, int fdout)
   dup2(fdin, 0);
   close(fdin);
   close(fdout);
-  execl(tcprules, tcprules,
-	pathjoin(rulesdir, smtpcdb),
-	pathjoinuniq(rulesdir, smtpcdb), 0);
+  execl(tcprules, tcprules, cdb_filename, tmp_filename, 0);
   perror(tcprules);
   return 111;
 }
@@ -191,6 +192,7 @@ int parent(int fdin, int fdout, int pid, char** remotes)
     return 1;
   close(1);
   waitpid(pid, &status, WUNTRACED);
+  unlink(tmp_filename);
   return !WIFEXITED(status) || WEXITSTATUS(status) ? 111 : 0;
 }
 
@@ -200,6 +202,8 @@ int main(int argc, char* argv[])
   pid_t pid;
   if(read_config())
     return 111;
+  cdb_filename = pathjoin(rulesdir, smtpcdb);
+  tmp_filename = pathjoinuniq(rulesdir, smtpcdb);
   if(pipe(fd)) {
     perror("pipe");
     return 1;
