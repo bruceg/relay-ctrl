@@ -1,3 +1,7 @@
+2000-10-06  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
+
+	* Released version 2.5
+
 2000-10-04  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
 
 	* relay-ctrl-age.c: Force an unlink of the temporary CDB file

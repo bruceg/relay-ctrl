@@ -2,7 +2,7 @@ relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
 Version 2.5
-2000-09-20
+2000-10-06
 
 This pair of programs controls access to relaying for users that
 authenticate using either POP3 using the qmail-popup/qmail-pop3d
