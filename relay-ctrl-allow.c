@@ -14,7 +14,6 @@ static const char* dir;
 static void make_file(const char* filename)
 {
   int cwd;
-  int fd;
 
   if ((cwd = open(".", O_RDONLY)) == -1) {
     warn1("Could not open current directory.");
@@ -24,10 +23,8 @@ static void make_file(const char* filename)
     warn3("Could not change directory to '", dir, "'.");
     return;
   }
-  if ((fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0666)) == -1)
-    warn3("Could not create '", filename, "'.");
-  else
-    close(fd);
+  if (!touch(filename))
+    warn3sys("Could not toucn '", filename, "'");
   if (fchdir(cwd) == -1)
     die1(111, "Could not change back to start directory.");
 }

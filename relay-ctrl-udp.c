@@ -40,15 +40,9 @@ int main(void)
       buffer[len] = 0;
       if ((ip = validate_ip(buffer)) == 0)
 	warn3("Invalid IP from '", ipv4_format(addr), "'.");
-      else {
-	int fd;
-	if ((fd = open(ip, O_WRONLY|O_CREAT|O_TRUNC, 0666)) == -1)
-	  warn3("Could not create '", ip, "'.");
-	else
-	  close(fd);
-	buffer[0] = 1;
-	socket_send4(sock, buffer, 1, addr, port);
-      }
+      else
+	if (!touch(ip))
+	  warn3sys("Could not touch '", ip, "'");
     }
   }
   return 0;
