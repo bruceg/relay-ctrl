@@ -1,13 +1,15 @@
 -------------------------------------------------------------------------------
 Changes in version 3.1
 
-- Modified the function that creates IP files to also call utime to make
-  sure the last-modified timestamp is for sure updated.
+- Modified the function that creates IP files to first create a new
+  temporary file and rename it to ensure the last-modified timestamp is
+  updated.
 
 - Various portability bugs fixed in the libraries.
 
 - relay-ctrl-allow now communicates the $USER and $DOMAIN variables to
-  relay-ctrl-check.
+  relay-ctrl-check.  relay-ctrl-send/relay-ctrl-udp don't handle this
+  yet.
 
 - Added a relay-ctrl-chdir program, to open a directory so the
   relay-ctrl-* programs can inherit the opened FD to fchdir.

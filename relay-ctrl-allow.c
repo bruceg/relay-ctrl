@@ -1,10 +1,13 @@
 #include <sys/types.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include "systime.h"
 #include <unistd.h>
 #include <utime.h>
+#include "misc/misc.h"
 #include "msg/msg.h"
 #include "relay-ctrl.h"
 
@@ -33,15 +36,25 @@ static void make_file(const char* filename)
   int error;
   int saved_umask;
   int mode;
+  char tmpfile[256];
+  char* ptr;
+  struct timeval t;
   
   switch (do_chdir()) {
   case 0: return;
-  case 1: mode = 0666; break;
+  case 2: mode = 0666; break;
   default: mode = 0600; break;
   }
   saved_umask = umask(0);
-  if ((fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, mode)) == -1)
-    warn3sys("Could not open '", filename, "' for writing");
+
+  gettimeofday(&t, 0);
+  ptr = tmpfile; *ptr++ = '.';
+  ptr = utoa2(t.tv_sec, ptr); *ptr++ = '.';
+  ptr = utoa2(t.tv_usec, ptr); *ptr++ = ':';
+  ptr = utoa2(getpid(), ptr);
+  
+  if ((fd = open(tmpfile, O_WRONLY|O_CREAT|O_EXCL, mode)) == -1)
+    warn3sys("Could not open '", tmpfile, "' for writing");
   else {
     error = 0;
     if (!write_env(fd, "USER") ||
@@ -50,8 +63,9 @@ static void make_file(const char* filename)
       warn3sys("Could not write to '", filename, "'");
       close(fd);
     }
-    else
-      utime(filename, 0);
+    else if (rename(tmpfile, filename) == -1)
+      warn5sys("Could not rename '", tmpfile, "' to '", filename, "'");
+    unlink(tmpfile);
   }
   umask(saved_umask);
   do_chdir_back();
