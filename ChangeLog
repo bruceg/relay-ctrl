@@ -1,0 +1,8 @@
+1999-09-29  Bruce Guenter  <bguenter@mikhail.qcc.sk.ca>
+
+	* relay-ctrl-age.c (age_addresses): Added code to setup a fixup
+	address in the relayclient string.
+	(read_fixup): Read in a "fixup" string to add to the relayclient
+	string output.
+	Moved all of the hard-coded file names into the defines.h file.
+

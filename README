@@ -1,0 +1,58 @@
+relay-ctrl
+SMTP Relaying Control for qmail & tcpserver
+Bruce Guenter <bruceg@em.ca>
+Version 1.2
+September 29, 1999
+
+This pair of programs controls access to relaying for users that
+authenticate using checkpassword.  At this time, this means POP3 using
+the qmail-popup/qmail-pop3d servers.
+
+Requirements:
+
+- You must be using qmail-popup/qmail-pop3d with either tcpserver or
+  tcp-env to serve POP.
+- You must be using tcpserver with qmail-smtpd to serve SMTP.
+
+How to install:
+
+- Check the definitions in defines.h.  The default settings are
+  appropriate for use with the ucspi-tcp package that I distribute.  In
+  particular, it assumes that the smtp rules file is named
+  "smtp.rules", and that the resulting smtp cdb file is named
+  "smtp.cdb", both of which reside in the directory defined by
+  "RULESDIR".
+- Check the Makefile for appropriate values for your compiler and
+  linker, and installation paths.
+- Run "make"
+- As root, run "make root-install"
+
+How to use:
+
+- If you want to have a fixup address (see the qmail FAQ) inserted into
+  the RELAYCLIENT setting, put it into the first line of "smtp.fixup" in
+  the directory RULESDIR (defaults to "/etc/tcpcontrol").
+- Insert the program "relay-ctrl-allow" between your checkpassword
+  program and qmail-pop3d in your invocation of tcpserver for the POP
+  service.
+- Add the following line to the root crontab.  This assumes a recent
+  version of vixie cron.  Other versions of cron will use a similar
+  syntax.
+0-59/5 * * * * /usr/sbin/relay-ctrl-age
+
+Operation:
+
+- relay-ctrl-age checks all the addresses listed in
+  /var/spool/relay-ctrl and removes any that have not been updated for
+  at least 15 minutes.  It then lists all of the addresses through a
+  pipe to tcprules to build the control database for the smtp server.
+
+- relay-ctrl-allow checks the environment for the remote IP from which
+  the POP connection is originating.  It records that number in the
+  directory /var/spool/relay-ctrl, and runs relay-ctrl-age to ensure
+  that it is recorded in the control tables.
+
+This program is Copyright(C) 1999 Bruce Guenter, and may be copied
+according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
+version.  A copy of this license is included with this package.  This
+package comes with no warranty of any kind.

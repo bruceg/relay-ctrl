@@ -1,0 +1,30 @@
+.TH relay-ctrl-age 8
+.SH NAME
+relay-ctrl-age \- age the list of addresses allowed by relay-ctrl-allow
+.SH SYNOPSIS
+.B relay-ctrl-age
+.SH DESCRIPTION
+.B relay-ctrl-age
+examines the dates on the list of IP addresses in the spool directory
+that have been added by
+.B relay-ctrl-allow ,
+and removes any that have not been touched for the last 15 minutes.
+It also updates the CDB that is used by
+.B tcpserver
+to control relaying by remote SMTP clients.
+.SH "RETURN VALUES"
+Returns 111 (temporary failure) if any operation fails; 0 otherwise.
+.SH FILES
+.TP
+.B /etc/tcpcontrol/smtp.rules
+After relay-ctrl-age has output its list of addresses to
+.B tcprules ,
+it outputs the content of this file as well.
+.TP
+.B /var/spool/relay-ctrl
+The directory in which the list of addresses resides.
+.SH "SEE ALSO"
+relay-ctrl-allow(8),
+qmail-smtpd(8),
+tcprules(1),
+tcpserver(1)
