@@ -5,6 +5,7 @@
 #include "net/socket.h"
 #include "msg/msg.h"
 #include "relay-ctrl.h"
+#include "fork.h"
 #include "iopoll.h"
 
 const char program[] = "relay-ctrl-send";
