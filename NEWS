@@ -1,4 +1,16 @@
 -------------------------------------------------------------------------------
+Changes in version 3.1.1
+
+- Fixed the obvious bugs in relay-ctrl-udp (it didn't send an
+  acknowledgement packet, among other things).
+
+- Modified relay-ctrl-chdir to dup the opened directory file descriptor
+  to the highest possible slot, to work around programs that close
+  opened file descriptors (ie various Courier programs).
+
+Development of this version has been sponsored by FutureQuest, Inc.
+ossi@FutureQuest.net  http://www.FutureQuest.net/
+-------------------------------------------------------------------------------
 Changes in version 3.1
 
 - relay-ctrl-allow now communicates the $USER and $DOMAIN variables to
