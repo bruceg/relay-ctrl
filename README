@@ -2,7 +2,7 @@ relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
 Version 3.0
-2001-12-17
+2002-01-10
 
 This pair of programs controls access to relaying for users that
 authenticate using either POP3 using the qmail-popup/qmail-pop3d
@@ -65,12 +65,10 @@ How to use with qmail-pop3d:
 How to use with pop3front
 
 - Change your run file from:
-  	tcpserver ... pop3front-auth hostname checkpassword \
-	pop3front-maildir
+  	tcpserver ... pop3front-auth cvm pop3front-maildir
   to:
   	envdir /etc/relay-ctrl \
-	tcpserver ... pop3front-auth hostname checkpassword \
-	relay-ctrl-allow pop3front-maildir
+	tcpserver ... pop3front-auth cvm relay-ctrl-allow pop3front-maildir
 
 How to use with Courier IMAP:
 
