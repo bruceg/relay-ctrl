@@ -1,12 +1,12 @@
-Name: relay-ctrl
+Name: @PACKAGE@
 Summary: SMTP Relaying Control for qmail & tcpserver
-Version: 2.0
+Version: @VERSION@
 Release: 1
 Copyright: GPL
 Group: Utilities/System
-Source: http://em.ca/~bruceg/relay-ctrl/relay-ctrl-%{PACKAGE_VERSION}.tar.gz
-BuildRoot: /tmp/relay-ctrl
-URL: http://em.ca/~bruceg/relay-ctrl/
+Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
+BuildRoot: /tmp/@PACKAGE@-root
+URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
 Requires: qmail >= 1.03+patches, ucspi-tcp >= 0.84
 Obsoletes: open-smtp
