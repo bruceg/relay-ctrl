@@ -6,6 +6,9 @@ Changes in version 3.1
 
 - Various portability bugs fixed in the libraries.
 
+- relay-ctrl-allow now communicates the $USER and $DOMAIN variables to
+  relay-ctrl-check.
+
 Development of this version has been sponsored by FutureQuest, Inc.
 ossi@FutureQuest.net  http://www.FutureQuest.net/
 -------------------------------------------------------------------------------
