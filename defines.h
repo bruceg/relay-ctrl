@@ -30,6 +30,6 @@
 #define SMTPCDB "smtp.cdb"
 #endif
 
-#ifndef SMTPFIXUP
-#define SMTPFIXUP "smtp.fixup"
+#ifndef SMTPRELAYCLIENT
+#define SMTPRELAYCLIENT "smtp.relayclient"
 #endif

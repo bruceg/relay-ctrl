@@ -1,3 +1,9 @@
+2000-09-19  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
+
+	* relay-ctrl-age.c (read_config): Removed the previous limited
+	"fixup" control file, and replaced it with a "relayclient"
+	control.
+
 2000-07-25  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
 
 	* relay-ctrl-allow.c (validate): Removed the checks for standard

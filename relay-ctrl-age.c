@@ -11,14 +11,12 @@
 
 #include "defines.h"
 
-const char* magic1 = ":allow,RELAYCLIENT='";
-const char* magic2 = "'\n";
-const char* fixup = "";
+const char* relayclient = ":allow,RELAYCLIENT=''\n";
 
-void read_fixup(void)
+void read_config(void)
 {
   char buf[BUFSIZE];
-  int in = open(RULESDIR "/" SMTPFIXUP, O_RDONLY);
+  int in = open(RULESDIR "/" SMTPRELAYCLIENT, O_RDONLY);
   ssize_t rd;
   if(in == -1)
     return;
@@ -31,7 +29,7 @@ void read_fixup(void)
     *end = 0;
     copy = malloc(end-buf+1);
     strcpy(copy, buf);
-    fixup = copy;
+    relayclient = copy;
   }
   close(in);
 }
@@ -59,9 +57,7 @@ void age_addresses(void)
 	unlink(name);
       else {
 	write(1, name, strlen(name));
-	write(1, magic1, strlen(magic1));
-	write(1, fixup, strlen(fixup));
-	write(1, magic2, strlen(magic2));
+	write(1, relayclient, strlen(relayclient));
       }
     }
     closedir(dir);
@@ -97,7 +93,7 @@ int child(int fdin, int fdout)
 int parent(int fdin, int fdout, int pid)
 {
   int status;
-  read_fixup();
+  read_config();
   close(1);
   dup2(fdout, 1);
   close(fdin);

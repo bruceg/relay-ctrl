@@ -16,6 +16,15 @@ to control relaying by remote SMTP clients.
 Returns 111 (temporary failure) if any operation fails; 0 otherwise.
 .SH FILES
 .TP
+.B /etc/tcpcontrol/smtp.relayclient
+If this file exists, its contents are appended to each relay controlled
+client's IP.
+It should contain something similar to:
+
+.EX
+:allow,RELAYCLIENT=""
+.EE
+.TP
 .B /etc/tcpcontrol/smtp.rules
 After relay-ctrl-age has output its list of addresses to
 .B tcprules ,

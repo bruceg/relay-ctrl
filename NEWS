@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Changes in version 2.1
+
+- Replaced the limited "fixup" control with a "relayclient" control file.
+
+- Removed check for standard input and standard output being sockets to
+  allow relay-ctrl-allow to be used with SSL pipes.
+
+- Check for the "::ffff:" IPv6 address prefix before validating address.
+-------------------------------------------------------------------------------
+Changes in version 2.0
+
+- Now supports Courier IMAP as well as qmail-popup/qmail-pop3d.
+-------------------------------------------------------------------------------

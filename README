@@ -2,16 +2,17 @@ relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
 Version 2.1
-2000-07-25
+2000-09-19
 
 This pair of programs controls access to relaying for users that
-authenticate using checkpassword.  At this time, this means either POP3
-using the qmail-popup/qmail-pop3d servers, or IMAP using Courier IMAP.
+authenticate using either POP3 using the qmail-popup/qmail-pop3d
+servers, or IMAP using Courier IMAP.
 
 Requirements:
 
 - You must be using qmail-popup/qmail-pop3d with either tcpserver or
-  tcp-env to serve POP.
+  tcp-env to serve POP3 OR
+- You must be using Courier IMAP to serve IMAP.
 - You must be using tcpserver with qmail-smtpd to serve SMTP.
 
 How to install:
@@ -30,8 +31,10 @@ How to install:
 How to use:
 
 - If you want to have a fixup address (see the qmail FAQ) inserted into
-  the RELAYCLIENT setting, put it into the first line of "smtp.fixup" in
-  the directory RULESDIR (defaults to "/etc/tcpcontrol").
+  the RELAYCLIENT setting, put it into the first line of
+  "smtp.relayclient" in the directory RULESDIR (defaults to
+  "/etc/tcpcontrol") as folows:
+  :allow,RELAYCLIENT='@fixup'
 - Add the following line to the root crontab.  This assumes a recent
   version of vixie cron.  Other versions of cron will use a similar
   syntax.
