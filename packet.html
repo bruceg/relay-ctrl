@@ -1,0 +1,61 @@
+<html>
+<body>
+<h1>UDP Packet Format</h1>
+
+<p>The packet contains the following data:
+
+<ol>
+<li>Format version number (one byte), set to 1.
+
+<li>A list of data items.  Each item has the following format:
+
+  <ol>
+  <li>Data type number (one byte, must not be zero)
+  <li>Data length (one byte: N)
+  <li>N bytes of binary data
+  </ol>
+
+<li>A zero byte.
+
+</ol></p>
+
+<p>Due to UDP transmission limits, the total packet length is limited
+to 512 bytes.</p>
+
+<h2>Item Types</h2>
+
+<table border=1>
+
+<tr> <th>Type</th> <th>Bytes</th> <th>Symbol</th> <th>Description</th>
+</tr>
+
+<tr> <td>0</td> <td>0</td> <td>END</td> <td>End of packet
+marker</td> </tr>
+
+<tr> <td>1</td> <td>0</td> <td>REQUEST</td> <td>Flag indicating
+this is a request packet</td> </tr>
+
+<tr> <td>2</td> <td>0</td> <td>RESPONSE</td> <td>Flag indicating
+this is a response packet</td> </tr>
+
+<tr> <td>3</td> <td>VAR</td> <td>TIMESTAMP</td> <td>ASCII decimal
+timestamp, represented as number of seconds since the UNIX epoch, with
+fractional seconds.  The timestamp is used to make each packet unique
+(making the hash unique), as well as to eliminate replay attacks.
+Response packets copy the timestamp from the request packet.</td>
+</tr>
+
+<tr> <td>4</td> <td>4</td> <td>IPV4</td> <td>Raw IP (version 4)
+address, in network byte order.</td> </tr>
+
+<tr> <td>5</td> <td>16</td> <td>IPV6</td> <td>Raw IP (version 6)
+address, in network byte order (not yet supported).</td> </tr>
+
+<tr> <td>6</td> <td>VAR</td> <td>ENV</td> <td>Environment variable,
+formatted as "<tt>NAME=VALUE</tt>".</td> </tr>
+
+<tr> <td>7</td> <td>32</td> <td>SHA</td> <td>SHA-256 hash of all
+the data in the packet up to but not including this item, plus the
+shared secret.</td> </tr>
+
+</table>
