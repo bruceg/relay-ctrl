@@ -17,10 +17,7 @@ int main(void)
   int sock;
   unsigned short port;
 
-  if ((tmp = getenv("RELAY_CTRL_DIR")) == 0)
-    warn1("$RELAY_CTRL_DIR is not set.");
-  if (chdir(tmp) == -1)
-    die3(111, "Could not change directory to '", tmp, "'.");
+  if (!do_chdir) return 111;
   
   port = 0;
   if ((tmp = getenv("RELAY_CTRL_PORT")) != 0) port = atoi(tmp);

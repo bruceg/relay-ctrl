@@ -8,7 +8,9 @@ relay-ctrl-udp \- Receive relay-ctrl notifications via UDP
 receives notifications of IPs that should be allowed to relay via UDP
 on port
 .I $RELAY_CTRL_PORT
-(defaults to 811), and records them in the directory specified by
+(defaults to 811), and records them in the directory specified by either
+.I $RELAY_CTRL_DIR_FD
+or
 .IR $RELAY_CTRL_DIR .
 The sender address of all invalid IPs strings are logged to standard
 error.

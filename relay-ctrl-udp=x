@@ -1,4 +1,5 @@
 relay-ctrl.a
+misc/misc.a
 msg/msg.a
 iobuf/iobuf.a
 net/ipv4.a
