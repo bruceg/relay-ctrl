@@ -33,10 +33,10 @@ How to use:
   the RELAYCLIENT setting, put it into the first line of
   "relayclient" in the config directory as folows:
   :allow,RELAYCLIENT='@fixup'
-- Add the following line to the root crontab.  This assumes a recent
-  version of vixie cron.  Other versions of cron will use a similar
-  syntax.
-0-59/5 * * * * /usr/sbin/relay-ctrl-age
+- Add the following line to a file in /etc/cron.d.  This assumes a
+  recent version of vixie cron.  Other versions of cron may use
+  different syntax, and you may need to edit root's crontab.
+* * * * * /usr/sbin/relay-ctrl-age
 
 How to use with qmail-pop3d:
 
@@ -53,15 +53,15 @@ How to use with Courier IMAP:
 
 Operation:
 
-- relay-ctrl-age checks all the addresses listed in
-  /var/spool/relay-ctrl and removes any that have not been updated for
-  at least 15 minutes.  It then lists all of the addresses through a
-  pipe to tcprules to build the control database for the smtp server.
+- relay-ctrl-age records IPs in /var/spool/relay-ctrl, checks all
+  previously recorded addresses, and removes any that have not been
+  updated for at least 15 minutes.  It then lists all of the addresses
+  through a pipe to tcprules to build the control database for the smtp
+  server.
 
 - relay-ctrl-allow checks the environment for the remote IP from which
-  the connection is originating.  It records that number in the
-  directory /var/spool/relay-ctrl, and runs relay-ctrl-age to ensure
-  that it is recorded in the control tables.
+  the connection is originating.  It runs relay-ctrl-age to ensure that
+  it is recorded in the control tables.
 
 This program is Copyright(C) 1999-2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later

@@ -186,7 +186,7 @@ int parent(int fdin, int fdout, int pid, char** remotes)
   dup2(fdout, 1);
   close(fdin);
   close(fdout);
-  if(age_addresses(remotes) || show_rules())
+  if(show_rules() || age_addresses(remotes))
     return 1;
   close(1);
   waitpid(pid, &status, WUNTRACED);

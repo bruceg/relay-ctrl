@@ -1,5 +1,9 @@
 2000-09-20  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
 
+	* relay-ctrl-age.c (parent): Show the rules file before the
+	generated rules, to allow the rules file to override generated
+	rules.
+
 	* relay-ctrl-allow.c: Removed the "touch" function from this
 	program, and moved it into relay-ctrl-age instead, which already
 	modifies files in the IP spool.

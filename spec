@@ -28,7 +28,7 @@ mkdir -p $RPM_BUILD_ROOT/{etc/cron.d,etc/relay-ctrl,usr/sbin,var/spool/relay-ctr
 
 make prefix=$RPM_BUILD_ROOT/usr install
 
-echo '0-59/5 * * * * root /usr/sbin/relay-ctrl-age' >$RPM_BUILD_ROOT/etc/cron.d/relay-ctrl
+echo '* * * * * root /usr/sbin/relay-ctrl-age' >$RPM_BUILD_ROOT/etc/cron.d/relay-ctrl
 
 %clean
 rm -rf $RPM_BUILD_ROOT
