@@ -1,5 +1,8 @@
-#include <stdlib.h>
 #include <sys/types.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include "msg/msg.h"
@@ -12,15 +15,65 @@ int msg_debug_bits = 0;
 
 #define LOG_IPS 1
 
+static const char* rc;
+static long expiry;
+
+static void load_env(int fd)
+{
+  static char buf[8192];
+  int rd;
+  char* ptr;
+  char* end;
+  int len;
+  
+  if ((rd = read(fd, buf, sizeof buf)) == -1)
+    warn1sys("Could not read from opened IP file?!?");
+  else if (rd > 0) {
+    for (ptr = buf; rd > 0; ptr += len, rd -= len) {
+      if ((end = memchr(ptr, 0, rd)) == 0) break;
+      len = end - ptr + 1;
+      if (memchr(ptr, '=', len) != 0)
+	if (putenv(ptr) == -1)
+	  warn1("Could not set environment string");
+    }
+  }
+}
+
+static void stat_ip(const char* ip)
+{
+  time_t now;
+  struct stat s;
+  int fd;
+  if ((fd = open(ip, O_RDONLY)) == -1) {
+    if (errno == ENOENT)
+      debug3(LOG_IPS, "IP ", ip, " not found");
+    else
+      warn3sys("Could not open IP file '", ip, "'");
+  }
+  else {
+    if (fstat(fd, &s) == -1)
+      warn1sys("Could not fstat opened IP file?!?");
+    else {
+      now = time(0);
+      if (s.st_mtime + expiry >= now) {
+	debug3(LOG_IPS, "IP ", ip, " found, setting $RELAYCLIENT");
+	setenv("RELAYCLIENT", rc, 1);
+	load_env(fd);
+	close(fd);
+      }
+      else {
+	debug3(LOG_IPS, "Expired IP ", ip, " found, removing");
+	unlink(ip);
+      }
+    }
+  }
+}
+
 int main(int argc, char* argv[])
 {
   const char* ip;
   const char* dir;
-  const char* rc;
-  long expiry;
-  time_t now;
   const char* tmp;
-  struct stat s;
   
   if (argc < 2) die1(1, "usage: relay-ctrl-check program [arguments]\n");
   if (getenv("RELAY_CTRL_LOG_IPS") != 0) msg_debug_bits |= LOG_IPS;
@@ -36,19 +89,7 @@ int main(int argc, char* argv[])
 	if (chdir(dir) == -1)
 	  warn1("Could not change directory.");
 	else
-	  if (stat(ip, &s) == 0) {
-	    now = time(0);
-	    if (s.st_mtime + expiry >= now) {
-	      debug3(LOG_IPS, "IP ", ip, " found, setting $RELAYCLIENT");
-	      setenv("RELAYCLIENT", rc, 1);
-	    }
-	    else {
-	      debug3(LOG_IPS, "Expired IP ", ip, " found, removing");
-	      unlink(ip);
-	    }
-	  }
-	  else
-	    debug3(LOG_IPS, "IP ", ip, " not found");
+	  stat_ip(ip);
       }
       else
 	debug1(LOG_IPS, "$TCPREMOTEIP not set, not checking IP");

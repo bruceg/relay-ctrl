@@ -20,9 +20,6 @@ relay-ctrl-check:
 
 - If $RELAY_CTRL_DIR_FD is set, fchdir to it.
 
-- Add any environment variables contained in the created file to the
-  environment.
-
 relay-ctrl-send:
 
 - Modify the protocol to send $USER and $DOMAIN.
