@@ -1,8 +1,8 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
-Version 1.2
-September 29, 1999
+Version 1.3
+February 3, 2000
 
 This pair of programs controls access to relaying for users that
 authenticate using checkpassword.  At this time, this means POP3 using
@@ -52,7 +52,7 @@ Operation:
   directory /var/spool/relay-ctrl, and runs relay-ctrl-age to ensure
   that it is recorded in the control tables.
 
-This program is Copyright(C) 1999 Bruce Guenter, and may be copied
+This program is Copyright(C) 1999-2000 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
 version.  A copy of this license is included with this package.  This
 package comes with no warranty of any kind.

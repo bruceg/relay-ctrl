@@ -10,7 +10,7 @@ installdir = $(install) -d
 
 progs	= relay-ctrl-allow relay-ctrl-age
 
-version	= 1.2
+version	= 1.3
 
 CC	= gcc
 CFLAGS	= -O -Wall -DAGE_CMD='"$(sbindir)/relay-ctrl-age"'
@@ -52,9 +52,9 @@ dist: relay-ctrl.spec Makefile
 	mv $(rpmdir)/RPMS/i386/relay-ctrl-$(version)-?.i386.rpm .
 	mv $(rpmdir)/SRPMS/relay-ctrl-$(version)-?.src.rpm .
 	install -m 444 relay-ctrl-$(version).tar.gz historical
-	scp README YEAR2000 \
-		relay-ctrl-$(version).tar.gz relay-ctrl-$(version)-?.*.rpm \
-		bruceg@em.ca:www/relay-ctrl
+#	scp README YEAR2000 \
+#		relay-ctrl-$(version).tar.gz relay-ctrl-$(version)-?.*.rpm \
+#		bruceg@em.ca:www/relay-ctrl
 
 clean:
 	$(RM) *.o $(progs)

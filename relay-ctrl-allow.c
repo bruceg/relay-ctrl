@@ -27,7 +27,7 @@ void run_age_cmd()
     open(devnul, O_RDONLY); /* fd 0 */
     open(devnul, O_WRONLY); /* fd 1 */
     open(devnul, O_WRONLY); /* fd 2 */
-    execl(AGE_CMD, 0);
+    execl(AGE_CMD, AGE_CMD, 0);
     exit(111);
   } else if(pid < 0) {
     perror("fork");

@@ -1,3 +1,11 @@
+2000-02-03  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
+
+	* relay-ctrl-age.c: Some systems need sys/types.h to be included
+	before dirent.h, so rearrange the include list.
+
+	* relay-ctrl-allow.c (run_age_cmd): Fixed typo in execution of
+	AGE_CMD that caused problems on BSDI.
+
 1999-09-29  Bruce Guenter  <bguenter@mikhail.qcc.sk.ca>
 
 	* relay-ctrl-age.c (age_addresses): Added code to setup a fixup

@@ -1,6 +1,6 @@
 Name: relay-ctrl
 Summary: SMTP Relaying Control for qmail & tcpserver
-Version: 1.2
+Version: 1.3
 Release: 1
 Copyright: GPL
 Group: Utilities/System
