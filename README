@@ -1,8 +1,8 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
-Version 2.0
-June 15, 2000
+Version 2.1
+2000-07-25
 
 This pair of programs controls access to relaying for users that
 authenticate using checkpassword.  At this time, this means either POP3

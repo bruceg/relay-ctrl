@@ -55,24 +55,24 @@ size_t writestr(int fd, const char* msg)
   return write(fd, msg, strlen(msg));
 }
   
-int validate(const char* str) 
+const char* validate(const char* str)
 {
   /* Security by obscurity -- do certain simple checks on the remote
      IP string and require that both stdin and stdout are sockets.
      Also require that UID and GID are non-zero. */
-  struct stat statbuf;
   const char* ptr;
+
+  /* Skip over a IPv6 address prefix inserted by couriertcpd */
+  if(!strncmp(str, "::ffff:", 7))
+    str += 7;
+  
   /* Ensure that the IP string contains only digits and periods. */
   for(ptr = str; *ptr != 0; ptr++) {
     char ch = *ptr;
-    if(ch != '.' && !isdigit(ch)) return 0;
+    if(ch != '.' && !isdigit(ch))
+      return 0;
   }
-  /* Ensure that both stdin and stdout are sockets */
-  if(fstat(0, &statbuf)) return 0;
-  if(!S_ISSOCK(statbuf.st_mode)) return 0;
-  if(fstat(1, &statbuf)) return 0;
-  if(!S_ISSOCK(statbuf.st_mode)) return 0;
-  return 1;
+  return str;
 }
 
 enum { imap, pop3 } authmode;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
 {
   struct stat statbuf;
   const char* tcpremoteip = getenv("TCPREMOTEIP");
-  if(!tcpremoteip || !validate(tcpremoteip)) {
+  if(!tcpremoteip || !(tcpremoteip = validate(tcpremoteip))) {
     writestr(2,
 	     "Error: relay-ctrl-allow must be run from tcp-env or tcpserver");
     return 111;

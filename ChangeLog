@@ -1,5 +1,13 @@
+2000-07-25  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
+
+	* relay-ctrl-allow.c (validate): Removed the checks for standard
+	input and output being pipes, and added a check for the "::ffff:"
+	IPv6 address prefix added by couriertcpd.
+
 2000-06-14  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
 
+	* Released version 2.0
+	
 	* relay-ctrl-allow.c (main): Require that UID and GID are
 	non-zero.  
 	(main): Handle a "--courier-imap" option to make it act like a
