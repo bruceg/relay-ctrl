@@ -1,3 +1,4 @@
 authenticated.o
+chdir.o
 touch.o
 validate_ip.o

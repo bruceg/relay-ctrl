@@ -29,19 +29,18 @@ static int write_env(int fd, const char* var)
 
 static void make_file(const char* filename)
 {
-  int cwd;
   int fd;
   int error;
+  int saved_umask;
+  int mode;
   
-  if ((cwd = open(".", O_RDONLY)) == -1) {
-    warn1("Could not open current directory.");
-    return;
+  switch (do_chdir()) {
+  case 0: return;
+  case 1: mode = 0666; break;
+  default: mode = 0600; break;
   }
-  if (chdir(dir) == -1) {
-    warn3("Could not change directory to '", dir, "'.");
-    return;
-  }
-  if ((fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0666)) == -1)
+  saved_umask = umask(0);
+  if ((fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, mode)) == -1)
     warn3sys("Could not open '", filename, "' for writing");
   else {
     error = 0;
@@ -54,8 +53,8 @@ static void make_file(const char* filename)
     else
       utime(filename, 0);
   }
-  if (fchdir(cwd) == -1)
-    die1(111, "Could not change back to start directory.");
+  umask(saved_umask);
+  do_chdir_back();
 }
 
 int main(int argc, char* argv[])

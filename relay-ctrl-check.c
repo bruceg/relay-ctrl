@@ -82,17 +82,10 @@ int main(int argc, char* argv[])
     if ((tmp = getenv("RELAY_CTRL_EXPIRY")) != 0) expiry = atol(tmp);
     if (expiry <= 0) expiry = 900;
     if ((rc = getenv("RELAY_CTRL_RELAYCLIENT")) == 0) rc = "";
-    if ((dir = getenv("RELAY_CTRL_DIR")) == 0)
-      warn1("$RELAY_CTRL_DIR is not set.");
-    else 
-      if ((ip = getenv("TCPREMOTEIP")) != 0) {
-	if (chdir(dir) == -1)
-	  warn1("Could not change directory.");
-	else
-	  stat_ip(ip);
-      }
-      else
-	debug1(LOG_IPS, "$TCPREMOTEIP not set, not checking IP");
+    if ((ip = getenv("TCPREMOTEIP")) == 0)
+      warn1("$TCPREMOTEIP not set, not checking IP");
+    else if (do_chdir())
+      stat_ip(ip);
   }
   else
     debug1(LOG_IPS, "$RELAYCLIENT already set, not checking IP");

@@ -2,13 +2,9 @@ relay-ctrl-age:
 
 relay-ctrl-allow:
 
-- If $RELAY_CTRL_DIR_FD is set, fchdir to it and set umask to 0.
-
 - Document need for relay-ctrl-chdir
 
 relay-ctrl-check:
-
-- If $RELAY_CTRL_DIR_FD is set, fchdir to it.
 
 relay-ctrl-send:
 
