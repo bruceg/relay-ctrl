@@ -84,6 +84,7 @@ int child(int fdin, int fdout)
   size_t length = strlen(RULESDIR)+20;
   char* tmpfile = malloc(length+1);
   snprintf(tmpfile, length, "%s/%s.%d", RULESDIR, SMTPCDB, getpid());
+  umask(022);
   close(0);
   dup2(fdin, 0);
   close(fdin);

@@ -1,3 +1,8 @@
+2000-03-15  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
+
+	* relay-ctrl-age.c (child): Added a "umask" call to force tcprules
+	to create a world-readable CDB file.
+
 2000-02-03  Bruce Guenter  <bruce@bruce-guenter.dyndns.org>
 
 	* relay-ctrl-age.c: Some systems need sys/types.h to be included

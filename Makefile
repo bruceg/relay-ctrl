@@ -10,7 +10,9 @@ installdir = $(install) -d
 
 progs	= relay-ctrl-allow relay-ctrl-age
 
-version	= 1.3
+PACKAGE = relay-ctrl
+VERSION	= 1.4
+distdir = $(PACKAGE)-$(VERSION)
 
 CC	= gcc
 CFLAGS	= -O -Wall -DAGE_CMD='"$(sbindir)/relay-ctrl-age"'
@@ -43,18 +45,23 @@ root-install: install
 rpmdir	= $(HOME)/redhat
 
 dist: relay-ctrl.spec Makefile
-	mkdir relay-ctrl-$(version)
+	mkdir $(distdir)
 	cp *.c *.h *.8 *.spec COPYING ChangeLog README Makefile YEAR2000 \
-		relay-ctrl-$(version)
-	tar -czvf relay-ctrl-$(version).tar.gz relay-ctrl-$(version)
-	rm -rf relay-ctrl-$(version)
-	rpm -ta --clean relay-ctrl-$(version).tar.gz
-	mv $(rpmdir)/RPMS/i386/relay-ctrl-$(version)-?.i386.rpm .
-	mv $(rpmdir)/SRPMS/relay-ctrl-$(version)-?.src.rpm .
-	install -m 444 relay-ctrl-$(version).tar.gz historical
-#	scp README YEAR2000 \
-#		relay-ctrl-$(version).tar.gz relay-ctrl-$(version)-?.*.rpm \
-#		bruceg@em.ca:www/relay-ctrl
+		$(distdir)
+	tar -czvf $(distdir).tar.gz $(distdir)
+	rm -rf $(distdir)
+
+rpms: dist
+	rpm -ta --clean $(distdir).tar.gz
+	mv $(rpmdir)/RPMS/i386/$(distdir)-?.i386.rpm .
+	mv $(rpmdir)/SRPMS/$(distdir)-?.src.rpm .
+
+dist-final: dist rpms
+	cvs commit
+	cvs rtag rel-`echo $(VERSION) | sed -e 's/\./-/g'` $(PACKAGE)
+	scp $(distdir).tar.gz $(distdir)-?.*.rpm \
+		bruceg@em.ca:www/$(PACKAGE)/
+	install -m 444 $(distdir).tar.gz historical
 
 clean:
 	$(RM) *.o $(progs)
