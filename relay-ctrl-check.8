@@ -25,6 +25,11 @@ is set to the value of
 .I $RELAY_CTRL_RELAYCLIENT
 (which defaults to an empty string).
 Otherwise the IP file is removed and ignored.
+If
+.I $RELAY_CTRL_LOG_IPS
+is set, this program will output a message reporting if it set
+.IR $RELAYCLIENT ,
+and why or why not.
 .SH "SEE ALSO"
 relay-ctrl-age(8),
 relay-ctrl-allow(8),
