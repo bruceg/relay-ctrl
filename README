@@ -1,8 +1,8 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
-Version 3.1
-2002-04-24
+Version 3.1.1
+2002-04-26
 
 This set of programs controls access to relaying for users that
 authenticate using either POP3 using the qmail-popup/qmail-pop3d
@@ -100,8 +100,10 @@ How to use with Courier IMAP:
   /usr/lib/courier-imap/etc/imapd.
 
 - You also need to modify the run file to execute
-  "envdir /etc/relay-ctrl relay-ctrl-chdir" before starting couriertcpd,
-  and I'm unsure where this needs to go.
+  "envdir /etc/relay-ctrl relay-ctrl-chdir" before starting imaplogin,
+  and I'm unsure where this needs to go.  It may also work to put the
+  above command string before couriertcpd instead of before imaplogin,
+  which is slightly more efficient.
 
 This program is Copyright(C) 1999-2002 Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
