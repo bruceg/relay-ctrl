@@ -9,14 +9,7 @@
 
 #include "defines.h"
 
-void touch(const char* filename)
-{
-  int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-  if(fd >= 0)
-    close(fd);
-}
-
-void run_age_cmd()
+void run_age_cmd(const char* remoteip)
 {
   pid_t pid = fork();
   if(pid == 0) {
@@ -27,7 +20,7 @@ void run_age_cmd()
     open(devnul, O_RDONLY); /* fd 0 */
     open(devnul, O_WRONLY); /* fd 1 */
     open(devnul, O_WRONLY); /* fd 2 */
-    execl(AGE_CMD, AGE_CMD, 0);
+    execl(AGE_CMD, AGE_CMD, remoteip, 0);
     exit(111);
   } else if(pid < 0) {
     perror("fork");
@@ -37,12 +30,7 @@ void run_age_cmd()
 
 void authenticated(const char* tcpremoteip)
 {
-  char* filename = malloc(strlen(SPOOLDIR)+strlen(tcpremoteip)+2);
-  strcpy(filename, SPOOLDIR);
-  strcat(filename, "/");
-  strcat(filename, tcpremoteip);
-  touch(filename);
-  run_age_cmd();
+  run_age_cmd(tcpremoteip);
   
   /* Since this program will be either setuid or setgid,
      revoke our priviledges now. */

@@ -1,7 +1,8 @@
 -------------------------------------------------------------------------------
-Changes in version 2.1
+Changes in version 2.5
 
-- Replaced the limited "fixup" control with a "relayclient" control file.
+- Replaced most of the defines with run-time config files.  See the man
+  page for relay-ctrl-age for more details.
 
 - Removed check for standard input and standard output being sockets to
   allow relay-ctrl-allow to be used with SSL pipes.

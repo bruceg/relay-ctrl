@@ -8,7 +8,9 @@ Source: http://em.ca/~bruceg/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: /tmp/@PACKAGE@-root
 URL: http://em.ca/~bruceg/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
-Requires: qmail >= 1.03+patches, ucspi-tcp >= 0.84
+Requires: qmail >= 1.03+patches
+Requires: ucspi-tcp >= 0.84
+Requires: vixie-cron >= 3.0
 Obsoletes: open-smtp
 
 %description
@@ -22,9 +24,11 @@ make CFLAGS="$RPM_OPT_FLAGS -DTCPRULES=\\\"/usr/bin/tcprules\\\"" LDFLAGS="-s" p
 
 %install
 rm -fr $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/{usr/sbin,var/spool/relay-ctrl}
+mkdir -p $RPM_BUILD_ROOT/{etc/cron.d,etc/relay-ctrl,usr/sbin,var/spool/relay-ctrl}
 
 make prefix=$RPM_BUILD_ROOT/usr install
+
+echo '0-59/5 * * * * root /usr/sbin/relay-ctrl-age' >$RPM_BUILD_ROOT/etc/cron.d/relay-ctrl
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -38,9 +42,6 @@ if [ "$1" = 1 ]; then
     cp=checkpassword
   fi
   echo "$cp /usr/sbin/relay-ctrl-allow" > $cpfile
-  # Install a root crontab entry
-  { EDITOR=cat crontab -e 2>/dev/null;
-    echo '0-59/5 * * * * /usr/sbin/relay-ctrl-age' } | crontab -
 fi
 
 %preun
@@ -48,17 +49,19 @@ if [ "$1" = 0 ]; then
   cpfile=/etc/qmail/control/checkpassword
   cp=`sed -e 's| /usr/sbin/relay-ctrl-allow||' $cpfile`
   echo "$cp" >$cpfile
-  # Uninstall the crontab entry
-  EDITOR="grep -v ' /usr/sbin/relay-ctrl-age$'" crontab -e 2>/dev/null | \
-    crontab -
+  # Remove old relay-ctrl entries
   rm -f /var/spool/relay-ctrl/*
   /usr/sbin/relay-ctrl-age
 fi
 
 %files
-%attr(-,root,root) %doc COPYING ChangeLog README NEWS YEAR2000
-%attr(0755,root,root) /usr/sbin/relay-ctrl-age
+%defattr(-,root,root)
+%doc COPYING ChangeLog README NEWS YEAR2000
+%config /etc/cron.d/*
+%dir /etc/relay-ctrl
+# %config /etc/relay-ctrl/*
+/usr/sbin/relay-ctrl-age
 %attr(4711,root,root) /usr/sbin/relay-ctrl-allow
-%attr(-,root,root) %dir /var/spool/relay-ctrl
-%attr(-,root,root) /usr/man/man8/*.8
+%dir /var/spool/relay-ctrl
+/usr/man/man8/*
 

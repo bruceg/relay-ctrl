@@ -1,3 +1,6 @@
+PACKAGE = relay-ctrl
+VERSION	= 2.5
+
 prefix	= /usr
 sbindir	= $(prefix)/sbin
 mandir	= $(prefix)/man
@@ -8,10 +11,6 @@ installdata = $(install) -m 644
 installbin = $(install) -m 755
 installdir = $(install) -d
 chmod	= chmod
-
-PACKAGE = relay-ctrl
-VERSION	= 2.1
-distdir = $(PACKAGE)-$(VERSION)
 
 CC	= gcc
 CFLAGS	= -O -Wall -DAGE_CMD='"$(sbindir)/relay-ctrl-age"'

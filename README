@@ -1,8 +1,8 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruceg@em.ca>
-Version 2.1
-2000-09-19
+Version 2.5
+2000-09-20
 
 This pair of programs controls access to relaying for users that
 authenticate using either POP3 using the qmail-popup/qmail-pop3d
@@ -18,11 +18,8 @@ Requirements:
 How to install:
 
 - Check the definitions in defines.h.  The default settings are
-  appropriate for use with the ucspi-tcp package that I distribute.  In
-  particular, it assumes that the smtp rules file is named
-  "smtp.rules", and that the resulting smtp cdb file is named
-  "smtp.cdb", both of which reside in the directory defined by
-  "RULESDIR".
+  appropriate for installing relay-ctrl under /usr instead of
+  /usr/local.
 - Check the Makefile for appropriate values for your compiler and
   linker, and installation paths.
 - Run "make"
@@ -30,10 +27,11 @@ How to install:
 
 How to use:
 
+- Make sure the configuration defaults are appropriate for your system.
+  See the man page for relay-ctrl-age.
 - If you want to have a fixup address (see the qmail FAQ) inserted into
   the RELAYCLIENT setting, put it into the first line of
-  "smtp.relayclient" in the directory RULESDIR (defaults to
-  "/etc/tcpcontrol") as folows:
+  "relayclient" in the config directory as folows:
   :allow,RELAYCLIENT='@fixup'
 - Add the following line to the root crontab.  This assumes a recent
   version of vixie cron.  Other versions of cron will use a similar
