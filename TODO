@@ -1,3 +1,5 @@
+- Write tests.
+
 relay-ctrl-age:
 
 relay-ctrl-allow:
@@ -20,3 +22,5 @@ relay-ctrl-udp:
 
 - Check the signatures of incoming packets.  Store signatures for
   seperate servers seperately.
+
+- Bind the socket to a specific IP instead of IPV4ADDR_ANY.
