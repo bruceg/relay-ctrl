@@ -145,7 +145,7 @@ char* itoa(char* ptr, unsigned i)
 {
   if(i > 10)
     ptr = itoa(ptr, i / 10);
-  *ptr++ = i % 10;
+  *ptr++ = i % 10 + '0';
   return ptr;
 }
 
@@ -160,6 +160,7 @@ char* pathjoinuniq(const char* part1, const char* part2)
   *ptr++ = '/';
   memcpy(ptr, part2, len2);
   ptr += len2;
+  *ptr++ = '.';
   ptr = itoa(ptr, getpid());
   *ptr = 0;
   return str;
