@@ -58,6 +58,7 @@ void age_addresses(void)
       else {
 	write(1, name, strlen(name));
 	write(1, relayclient, strlen(relayclient));
+	write(1, "\n", 1);
       }
     }
     closedir(dir);
