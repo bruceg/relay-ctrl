@@ -8,7 +8,6 @@ Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-root
 URL: http://untroubled.org/@PACKAGE@/
 Packager: Bruce Guenter <bruceg@em.ca>
-Requires: qmail >= 1.03+patches
 Requires: vixie-cron >= 3.0
 Obsoletes: open-smtp
 

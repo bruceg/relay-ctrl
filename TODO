@@ -2,8 +2,6 @@ relay-ctrl-age:
 
 relay-ctrl-allow:
 
-- Document need for relay-ctrl-chdir
-
 relay-ctrl-check:
 
 relay-ctrl-send:
