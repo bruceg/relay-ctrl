@@ -1,0 +1,4 @@
+msg/msg.a
+iobuf/iobuf.a
+iopoll.o
+setenv.o

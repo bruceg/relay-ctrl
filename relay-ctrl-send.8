@@ -1,0 +1,30 @@
+.TH relay-ctrl-send 8
+.SH NAME
+relay-ctrl-send \- Send relay-ctrl notifications via UDP
+.SH SYNOPSIS
+.B relay-ctrl-send
+.B program
+[
+.B argument ...
+]
+.SH DESCRIPTION
+.B relay-ctrl-send
+sends the client's IP address to a set of relay-ctrl servers
+specified by
+.I $RELAY_CTRL_REMOTES
+on UDP port
+.I $RELAY_CTRL_PORT
+(defaults to 811) after performing the same authentication checks as
+.B relay-ctrl-allow .
+Transmission is handled in the background while
+.B program
+is executed.
+It attempts the transmission up to
+.I $RELAY_CTRL_TRIES
+times (defaults to 5), and waits
+.I $RELAY_CTRL_TIMEOUT
+seconds (defaults to 1) each time for a response from the servers.
+.SH SEE ALSO
+relay-ctrl-allow(8),
+relay-ctrl-udp(8),
+relay-ctrl-check(8)

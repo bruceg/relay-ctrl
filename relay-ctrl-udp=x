@@ -1,0 +1,6 @@
+relay-ctrl.a
+msg/msg.a
+iobuf/iobuf.a
+net/ipv4.a
+net/socket.a
+iopoll.o

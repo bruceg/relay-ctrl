@@ -1,0 +1,20 @@
+.TH relay-ctrl-udp 8
+.SH NAME
+relay-ctrl-udp \- Receive relay-ctrl notifications via UDP
+.SH SYNOPSIS
+.B relay-ctrl-udp
+.SH DESCRIPTION
+.B relay-ctrl-udp
+receives notifications of IPs that should be allowed to relay via UDP
+on port
+.I $RELAY_CTRL_PORT
+(defaults to 811), and records them in the directory specified by
+.IR $RELAY_CTRL_DIR .
+The sender address of all invalid IPs strings are logged to standard
+error.
+.SH SEE ALSO
+relay-ctrl-send(8),
+relay-ctrl-check(8)
+.SH NOTES
+This program does no source address verification.  Use a firewall to
+filter unwanted transmissions.

@@ -1,0 +1,32 @@
+.TH relay-ctrl-check 8
+.SH NAME
+relay-ctrl-check \- check if the (SMTP) client is allowed to relay
+.SH SYNOPSIS
+.B relay-ctrl-check
+.B program
+[
+.I arguments ...
+]
+.SH DESCRIPTION
+Before executing
+.BR program ,
+.B relay-ctrl-check
+checks if
+.I $RELAYCLIENT
+is set.  If not, it looks up the IP specified by
+.I $TCPREMOTEIP
+in the directory specified by
+.IR $RELAY_CTRL_DIR .
+If the IP file exists, and is not more than
+.I $RELAY_CTRL_EXPIRY
+seconds old (which defaults to 900 or 15 minutes), then
+.I $RELAYCLIENT
+is set to the value of
+.I $RELAY_CTRL_RELAYCLIENT
+(which defaults to an empty string).
+Otherwise the IP file is removed and ignored.
+.SH "SEE ALSO"
+relay-ctrl-age(8),
+relay-ctrl-allow(8),
+qmail-smtpd(8),
+tcpserver(1)
