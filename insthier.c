@@ -9,6 +9,7 @@ void insthier(void) {
   
   c(bin, "relay-ctrl-allow", -1, -1, 0755);
   c(bin, "relay-ctrl-age",   -1, -1, 0755);
+  c(bin, "relay-ctrl-chdir", -1, -1, 0755);
   c(bin, "relay-ctrl-check", -1, -1, 0755);
   c(bin, "relay-ctrl-send",  -1, -1, 0755);
   c(bin, "relay-ctrl-udp",   -1, -1, 0755);
