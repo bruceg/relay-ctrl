@@ -21,9 +21,9 @@ LIBS	=
 RM	= rm -f
 
 PROGS	= relay-ctrl-allow relay-ctrl-age
-MAN8S	= relay-ctrl-age.1 relay-ctrl-allow.1
+MAN8S	= relay-ctrl-age.8 relay-ctrl-allow.8
 
-all: $(progs)
+all: $(PROGS)
 
 relay-ctrl-allow: relay-ctrl-allow.o
 	$(LD) $(LDFLAGS) -o $@ relay-ctrl-allow.o $(LIBS)
@@ -31,14 +31,14 @@ relay-ctrl-allow: relay-ctrl-allow.o
 relay-ctrl-age: relay-ctrl-age.o
 	$(LD) $(LDFLAGS) -o $@ relay-ctrl-age.o $(LIBS)
 
-relay-ctrl-age.o: relay-ctrl-age.c
-relay-ctrl-allow.o: relay-ctrl-allow.c
+relay-ctrl-age.o: relay-ctrl-age.c defines.h
+relay-ctrl-allow.o: relay-ctrl-allow.c defines.h
 
 install: install.bin install.man
 
-install.bin: $(progs)
+install.bin: $(PROGS)
 	$(installdir) $(sbindir)
-	$(installbin) $(progs) $(sbindir)
+	$(installbin) $(PROGS) $(sbindir)
 
 install.man:
 	$(installdir) $(man8dir)
@@ -48,4 +48,4 @@ root-install: install
 	$(chmod) u+s $(sbindir)/relay-ctrl-allow
 
 clean:
-	$(RM) *.o $(progs)
+	$(RM) *.o $(PROGS)
