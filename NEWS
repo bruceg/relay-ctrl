@@ -1,6 +1,8 @@
 -------------------------------------------------------------------------------
 Changes in version 3.1.2
 
+- Fixed the authenticated test when used with Courier IMAP.
+
 - Tweaked relay-ctrl-allow to only try to save a handle to the current
   working directory if it's going to execute another command later.
 
