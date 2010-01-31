@@ -33,11 +33,7 @@ mkdir -p %{buildroot}/etc/relay-ctrl
 mkdir -p -m 700 %{buildroot}/var/spool/relay-ctrl
 mkdir -p -m 777 %{buildroot}/var/spool/relay-ctrl/allow
 
-echo %{buildroot}%{_bindir} >conf-bin
-echo %{buildroot}%{_mandir} >conf-man
-make installer instcheck
-./installer
-./instcheck
+make install_prefix=%{buildroot} install
 
 pushd %{buildroot}/etc/relay-ctrl
   echo /var/spool/relay-ctrl/allow >RELAY_CTRL_DIR
