@@ -36,7 +36,7 @@ static void make_file(const char* filename, int save_cwd)
   int error;
   int saved_umask;
   int mode;
-  char tmpfile[256];
+  char tmpname[256];
   char* ptr;
   struct timeval t;
   
@@ -48,13 +48,13 @@ static void make_file(const char* filename, int save_cwd)
   saved_umask = umask(0);
 
   gettimeofday(&t, 0);
-  ptr = tmpfile; *ptr++ = '.';
+  ptr = tmpname; *ptr++ = '.';
   ptr = utoa2(t.tv_sec, ptr); *ptr++ = '.';
   ptr = utoa2(t.tv_usec, ptr); *ptr++ = ':';
   ptr = utoa2(getpid(), ptr);
   
-  if ((fd = open(tmpfile, O_WRONLY|O_CREAT|O_EXCL, mode)) == -1)
-    warn3sys("Could not open '", tmpfile, "' for writing");
+  if ((fd = open(tmpname, O_WRONLY|O_CREAT|O_EXCL, mode)) == -1)
+    warn3sys("Could not open '", tmpname, "' for writing");
   else {
     error = 0;
     if (!write_env(fd, "USER") ||
@@ -63,9 +63,9 @@ static void make_file(const char* filename, int save_cwd)
       warn3sys("Could not write to '", filename, "'");
       close(fd);
     }
-    else if (rename(tmpfile, filename) == -1)
-      warn5sys("Could not rename '", tmpfile, "' to '", filename, "'");
-    unlink(tmpfile);
+    else if (rename(tmpname, filename) == -1)
+      warn5sys("Could not rename '", tmpname, "' to '", filename, "'");
+    unlink(tmpname);
   }
   if (save_cwd) {
     umask(saved_umask);
