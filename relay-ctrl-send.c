@@ -1,12 +1,11 @@
+#include <sysdeps.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "net/ipv4.h"
-#include "net/socket.h"
-#include "msg/msg.h"
+#include <net/ipv4.h>
+#include <net/socket.h>
+#include <msg/msg.h>
 #include "relay-ctrl.h"
-#include "fork.h"
-#include "iopoll.h"
 
 const char program[] = "relay-ctrl-send";
 const int msg_show_pid = 1;
@@ -36,7 +35,7 @@ static struct remote* parse_remotes(char* str)
     if ((nr = malloc(sizeof *nr)) == 0)
       die1(111, "Could not allocate remote structure.");
     nr->next = remotes;
-    if (!ipv4_parse(remote, nr->addr, &remote))
+    if (!ipv4_parse(remote, &nr->addr, &remote))
       warn3("Could not parse IP '", remote, "'.");
     else {
       nr->rcvd = 0;
@@ -53,8 +52,8 @@ static void send_one(struct remote* remote, int sock)
   for (; remote != 0; remote = remote->next)
     if (!remote->rcvd)
       if (socket_send4(sock, packet, packetlen,
-		       remote->addr, remote->port) != packetlen)
-	warn3("Sending IP to '", ipv4_format(remote->addr), "' failed.");
+		       &remote->addr, remote->port) != packetlen)
+	warn3("Sending IP to '", ipv4_format(&remote->addr), "' failed.");
 }
 
 static int recv_wait(struct remote* remotes, int sock)
@@ -68,10 +67,10 @@ static int recv_wait(struct remote* remotes, int sock)
     char buf[1];
     int len;
     int done;
-    if ((len = socket_recv4(sock, buf, 1, addr, &port)) == 1) {
+    if ((len = socket_recv4(sock, buf, 1, &addr, &port)) == 1) {
       struct remote* r;
       for (done = 1, r = remotes; r != 0; r = r->next) {
-	if (memcmp(r->addr, addr, 4) == 0)
+	if (memcmp(&r->addr, &addr, 4) == 0)
 	  r->rcvd = 1;
 	if (!r->rcvd) done = 0;
       }
@@ -90,7 +89,7 @@ static void send_ip(char* str)
   if ((remotes = parse_remotes(str)) == 0) return;
   if ((sock = socket_udp()) == -1)
     die1(111, "Could not create UDP socket.");
-  if (socket_bind4(sock, IPV4ADDR_ANY, 0) == -1)
+  if (socket_bind4(sock, &IPV4ADDR_ANY, 0) == -1)
     die1(111, "Could not bind UDP socket.");
 
   for (; tries > 0; --tries) {
@@ -100,7 +99,7 @@ static void send_ip(char* str)
   for (r = remotes; r != 0; r = r->next)
     if (!r->rcvd)
       warn3("Timed out waiting for response from '",
-	    ipv4_format(r->addr), "'.");
+	    ipv4_format(&r->addr), "'.");
 }
 
 int make_packet(const char* ip)

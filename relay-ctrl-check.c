@@ -1,13 +1,13 @@
-#include <sys/types.h>
+#include <sysdeps.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "msg/msg.h"
-#include "systime.h"
-#include "setenv.h"
+#include <msg/msg.h>
+#include <systime.h>
+#include "relay-ctrl.h"
 
 const char program[] = "relay-ctrl-check";
 const int msg_show_pid = 1;

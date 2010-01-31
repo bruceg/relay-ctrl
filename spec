@@ -8,6 +8,7 @@ Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-root
 URL: http://untroubled.org/@PACKAGE@/
 Packager: Bruce Guenter <bruce@untroubled.org>
+BuildRequires: bglibs >= 1.100
 Requires: vixie-cron >= 3.0
 Obsoletes: open-smtp
 

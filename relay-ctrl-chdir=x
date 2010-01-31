@@ -1,5 +1,1 @@
-misc/misc.a
-msg/msg.a
-iobuf/iobuf.a
-setenv.o
-iopoll.o
+-lbg

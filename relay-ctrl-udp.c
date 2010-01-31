@@ -1,11 +1,11 @@
+#include <sysdeps.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
-#include "msg/msg.h"
-#include "net/ipv4.h"
-#include "net/socket.h"
+#include <msg/msg.h>
+#include <net/ipv4.h>
+#include <net/socket.h>
 #include "relay-ctrl.h"
 
 const char program[] = "relay-ctrl-udp";
@@ -24,7 +24,7 @@ int main(void)
   if (port <= 0) port = DEFAULT_PORT;
   
   if ((sock = socket_udp()) == -1) die1(111, "Could not create socket.");
-  if (socket_bind4(sock, IPV4ADDR_ANY, port) == -1)
+  if (socket_bind4(sock, &IPV4ADDR_ANY, port) == -1)
     die1(111, "Could not bind socket.");
 
   for (;;) {
@@ -32,16 +32,16 @@ int main(void)
     int len;
     ipv4addr addr;
     if ((len = socket_recv4(sock, buffer, sizeof buffer - 1,
-			    addr, &port)) != -1) {
+			    &addr, &port)) != -1) {
       const char* ip;
       buffer[len] = 0;
       if ((ip = validate_ip(buffer)) == 0)
-	warn3("Invalid IP from '", ipv4_format(addr), "'.");
+	warn3("Invalid IP from '", ipv4_format(&addr), "'.");
       else if (!touch(ip))
 	warn3sys("Could not touch '", ip, "'");
       else {
 	buffer[0] = 1;
-	socket_send4(sock, buffer, 1, addr, port);
+	socket_send4(sock, buffer, 1, &addr, port);
       }
     }
   }

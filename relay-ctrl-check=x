@@ -1,6 +1,2 @@
 relay-ctrl.a
-misc/misc.a
-msg/msg.a
-iobuf/iobuf.a
-iopoll.o
-setenv.o
+-lbg

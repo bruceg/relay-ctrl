@@ -1,11 +1,10 @@
-#include <sys/types.h>
+#include <sysdeps.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "misc/misc.h"
-#include "msg/msg.h"
-#include "setenv.h"
+#include <misc/misc.h>
+#include <msg/msg.h>
 
 const char program[] = "relay-ctrl-chdir";
 const int msg_show_pid = 1;
