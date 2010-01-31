@@ -72,7 +72,6 @@ static void stat_ip(const char* ip)
 int main(int argc, char* argv[])
 {
   const char* ip;
-  const char* dir;
   const char* tmp;
   
   if (argc < 2) die1(1, "usage: relay-ctrl-check program [arguments]\n");
