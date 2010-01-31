@@ -1,6 +1,6 @@
 relay-ctrl
 SMTP Relaying Control for qmail & tcpserver
-Bruce Guenter <bruceg@em.ca>
+Bruce Guenter <bruce@untroubled.org>
 Version 3.1.1
 2002-04-26
 
@@ -10,9 +10,9 @@ or pop3front servers, or IMAP using Courier IMAP.
 
 A mailing list has been set up to discuss this and other packages.
 To subscribe, send an email to:
-	bgware-subscribe@lists.em.ca
+	bgware-subscribe@lists.untroubled.org
 A mailing list archive is available at:
-	http://lists.em.ca/?list=bgware
+	http://lists.untroubled.org/?list=bgware
 
 Development versions of relay-ctrl are available via anonymous CVS.
 Set your CVSROOT to ":pserver:cvs@bruce-guenter.dyndns.org:/CVS",

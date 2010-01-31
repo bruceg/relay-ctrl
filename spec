@@ -7,7 +7,7 @@ Group: Utilities/System
 Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-root
 URL: http://untroubled.org/@PACKAGE@/
-Packager: Bruce Guenter <bruceg@em.ca>
+Packager: Bruce Guenter <bruce@untroubled.org>
 Requires: vixie-cron >= 3.0
 Obsoletes: open-smtp
 
