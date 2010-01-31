@@ -30,7 +30,7 @@ static int write_env(int fd, const char* var)
   return 1;
 }
 
-static void make_file(const char* filename)
+static void make_file(const char* filename, int save_cwd)
 {
   int fd;
   int error;
@@ -40,7 +40,7 @@ static void make_file(const char* filename)
   char* ptr;
   struct timeval t;
   
-  switch (do_chdir()) {
+  switch (do_chdir(save_cwd)) {
   case 0: return;
   case 2: mode = 0666; break;
   default: mode = 0600; break;
@@ -67,8 +67,10 @@ static void make_file(const char* filename)
       warn5sys("Could not rename '", tmpfile, "' to '", filename, "'");
     unlink(tmpfile);
   }
-  umask(saved_umask);
-  do_chdir_back();
+  if (save_cwd) {
+    umask(saved_umask);
+    do_chdir_back();
+  }
 }
 
 int main(int argc, char* argv[])
@@ -79,7 +81,7 @@ int main(int argc, char* argv[])
     warn1("$RELAY_CTRL_DIR is not set.");
   else
     if (is_authenticated())
-      make_file(ip);
+      make_file(ip, argc > 1);
 
   if (argc > 1) {
     execvp(argv[1], argv+1);

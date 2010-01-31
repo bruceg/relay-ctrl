@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
     if ((rc = getenv("RELAY_CTRL_RELAYCLIENT")) == 0) rc = "";
     if ((ip = getenv("TCPREMOTEIP")) == 0)
       warn1("$TCPREMOTEIP not set, not checking IP");
-    else if (do_chdir())
+    else if (do_chdir(0))
       stat_ip(ip);
   }
   else

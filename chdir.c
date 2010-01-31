@@ -8,14 +8,14 @@
 #include "misc/misc.h"
 #include "msg/msg.h"
 
-static int cwd;
+static int cwd = -1;
 
-int do_chdir(void)
+int do_chdir(int save_cwd)
 {
   const char* tmp;
   int fd;
   
-  if ((cwd = open(".", O_RDONLY)) == -1)
+  if (save_cwd && (cwd = open(".", O_RDONLY)) == -1)
     warn1sys("Could not open current directory");
   else if ((tmp = getenv("RELAY_CTRL_DIR_FD")) != 0) {
     fd = strtou(tmp, &tmp);

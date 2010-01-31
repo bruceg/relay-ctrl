@@ -17,7 +17,7 @@ int main(void)
   int sock;
   unsigned short port;
 
-  if (!do_chdir()) return 111;
+  if (!do_chdir(0)) return 111;
   
   port = 0;
   if ((tmp = getenv("RELAY_CTRL_PORT")) != 0) port = atoi(tmp);
