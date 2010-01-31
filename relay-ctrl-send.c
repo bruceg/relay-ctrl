@@ -13,7 +13,7 @@ static char packet[512];
 static long packetlen;
 static long tries;
 static long timeout;
-static unsigned short port;
+static unsigned short sendport;
 
 struct remote 
 {
@@ -39,7 +39,7 @@ static struct remote* parse_remotes(char* str)
       warn3("Could not parse IP '", remote, "'.");
     else {
       nr->rcvd = 0;
-      nr->port = port;
+      nr->port = sendport;
       remotes = nr;
     }
     remote = strtok(0, ",");
@@ -122,9 +122,9 @@ int main(int argc, char* argv[])
   strcpy(packet, tmp);
   packetlen = strlen(packet);
   
-  port = 0;
-  if ((tmp = getenv("RELAY_CTRL_PORT")) != 0) port = atoi(tmp);
-  if (port <= 0) port = DEFAULT_PORT;
+  sendport = 0;
+  if ((tmp = getenv("RELAY_CTRL_PORT")) != 0) sendport = atoi(tmp);
+  if (sendport <= 0) sendport = DEFAULT_PORT;
 
   tries = 0;
   if ((tmp = getenv("RELAY_CTRL_TRIES")) != 0) tries = atoi(tmp);
