@@ -2,7 +2,7 @@ Name: @PACKAGE@
 Summary: SMTP Relaying Control for qmail & tcpserver
 Version: @VERSION@
 Release: 1
-Copyright: GPL
+License: GPL
 Group: Utilities/System
 Source: http://untroubled.org/@PACKAGE@/@PACKAGE@-@VERSION@.tar.gz
 BuildRoot: %{_tmppath}/@PACKAGE@-root
