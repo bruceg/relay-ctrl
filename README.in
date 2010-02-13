@@ -1,8 +1,8 @@
-relay-ctrl
+@PACKAGE@
 SMTP Relaying Control for qmail & tcpserver
 Bruce Guenter <bruce@untroubled.org>
-Version 3.1.1
-2002-04-26
+Version @VERSION@
+@TODAY@
 
 This set of programs controls access to relaying for users that
 authenticate using either POP3 using the qmail-popup/qmail-pop3d
@@ -14,12 +14,12 @@ To subscribe, send an email to:
 A mailing list archive is available at:
 	http://lists.untroubled.org/?list=bgware
 
-Development versions of relay-ctrl are available via anonymous CVS.
-Set your CVSROOT to ":pserver:cvs@bruce-guenter.dyndns.org:/CVS",
-login with an empty password, and check out the "relay-ctrl" module.
+Development versions of @PACKAGE@ are available via git at:
+        http://untroubled.org/git/@PACKAGE@.git
 
 Requirements:
 
+- This package depends on bglibs version 1.100 or later.
 - You must be using either qmail-popup/qmail-pop3d or pop3front
   with either tcpserver or tcp-env to serve POP3 OR
 - You must be using Courier IMAP to serve IMAP.
@@ -30,7 +30,7 @@ How to install:
 
 - Check the definitions in the conf-* files.
 - Run "make"
-- As root, run "./installer"
+- As root, run "make install"
 
 How to configure it for use:
 
@@ -105,7 +105,7 @@ How to use with Courier IMAP:
   above command string before couriertcpd instead of before imaplogin,
   which is slightly more efficient.
 
-This program is Copyright(C) 1999-2002 Bruce Guenter, and may be copied
+This program is Copyright(C) 1999-@YEAR@ Bruce Guenter, and may be copied
 according to the GNU GENERAL PUBLIC LICENSE (GPL) Version 2 or a later
 version.  A copy of this license is included with this package.  This
 package comes with no warranty of any kind.
