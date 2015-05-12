@@ -14,6 +14,7 @@ const int msg_show_pid = 1;
 int msg_debug_bits = 0;
 
 #define LOG_IPS 1
+#define LOG_ENV 2
 
 static const char* rc;
 static long expiry;
@@ -32,9 +33,11 @@ static void load_env(int fd)
     for (ptr = buf; rd > 0; ptr += len, rd -= len) {
       if ((end = memchr(ptr, 0, rd)) == 0) break;
       len = end - ptr + 1;
-      if (memchr(ptr, '=', len) != 0)
+      if (memchr(ptr, '=', len) != 0) {
+	debug1(LOG_ENV, ptr);
 	if (putenv(ptr) == -1)
 	  warn1("Could not set environment string");
+      }
     }
   }
 }
@@ -76,6 +79,7 @@ int main(int argc, char* argv[])
   
   if (argc < 2) die1(1, "usage: relay-ctrl-check program [arguments]\n");
   if (getenv("RELAY_CTRL_LOG_IPS") != 0) msg_debug_bits |= LOG_IPS;
+  if (getenv("RELAY_CTRL_LOG_ENV") != 0) msg_debug_bits |= LOG_ENV;
   if (getenv("RELAYCLIENT") == 0) {
     expiry = 0;
     if ((tmp = getenv("RELAY_CTRL_EXPIRY")) != 0) expiry = atol(tmp);
