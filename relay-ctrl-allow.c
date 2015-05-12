@@ -33,7 +33,6 @@ static int write_env(int fd, const char* var)
 static void make_file(const char* filename, int save_cwd)
 {
   int fd;
-  int error;
   int saved_umask;
   int mode;
   char tmpname[256];
@@ -56,7 +55,6 @@ static void make_file(const char* filename, int save_cwd)
   if ((fd = open(tmpname, O_WRONLY|O_CREAT|O_EXCL, mode)) == -1)
     warn3sys("Could not open '", tmpname, "' for writing");
   else {
-    error = 0;
     if (!write_env(fd, "USER") ||
 	!write_env(fd, "DOMAIN") ||
 	close(fd) == -1) {
