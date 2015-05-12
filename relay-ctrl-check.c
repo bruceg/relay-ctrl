@@ -11,10 +11,8 @@
 
 const char program[] = "relay-ctrl-check";
 const int msg_show_pid = 1;
-int msg_debug_bits = 0;
-
-#define LOG_IPS 1
-#define LOG_ENV 2
+static int log_ips = 0;
+static int log_env = 0;
 
 static const char* rc;
 static long expiry;
@@ -34,7 +32,8 @@ static void load_env(int fd)
       if ((end = memchr(ptr, 0, rd)) == 0) break;
       len = end - ptr + 1;
       if (memchr(ptr, '=', len) != 0) {
-	debug1(LOG_ENV, ptr);
+	if (log_env)
+	  msg2("Setting ", ptr);
 	if (putenv(ptr) == -1)
 	  warn1("Could not set environment string");
       }
@@ -48,8 +47,10 @@ static void stat_ip(const char* ip)
   struct stat s;
   int fd;
   if ((fd = open(ip, O_RDONLY)) == -1) {
-    if (errno == ENOENT)
-      debug3(LOG_IPS, "IP ", ip, " not found");
+    if (errno == ENOENT) {
+      if (log_ips)
+	msg3("IP ", ip, " not found");
+    }
     else
       warn3sys("Could not open IP file '", ip, "'");
   }
@@ -59,13 +60,15 @@ static void stat_ip(const char* ip)
     else {
       now = time(0);
       if (s.st_mtime + expiry >= now) {
-	debug3(LOG_IPS, "IP ", ip, " found, setting $RELAYCLIENT");
+	if (log_ips)
+	  msg3("IP ", ip, " found, setting $RELAYCLIENT");
 	setenv("RELAYCLIENT", rc, 1);
 	load_env(fd);
 	close(fd);
       }
       else {
-	debug3(LOG_IPS, "Expired IP ", ip, " found, removing");
+	if (log_ips)
+	  msg3("Expired IP ", ip, " found, removing");
 	unlink(ip);
       }
     }
@@ -78,8 +81,8 @@ int main(int argc, char* argv[])
   const char* tmp;
   
   if (argc < 2) die1(1, "usage: relay-ctrl-check program [arguments]\n");
-  if (getenv("RELAY_CTRL_LOG_IPS") != 0) msg_debug_bits |= LOG_IPS;
-  if (getenv("RELAY_CTRL_LOG_ENV") != 0) msg_debug_bits |= LOG_ENV;
+  log_ips = getenv("RELAY_CTRL_LOG_IPS") != 0;
+  log_env = getenv("RELAY_CTRL_LOG_ENV") != 0;
   if (getenv("RELAYCLIENT") == 0) {
     expiry = 0;
     if ((tmp = getenv("RELAY_CTRL_EXPIRY")) != 0) expiry = atol(tmp);
@@ -90,8 +93,10 @@ int main(int argc, char* argv[])
     else if (do_chdir(0))
       stat_ip(ip);
   }
-  else
-    debug1(LOG_IPS, "$RELAYCLIENT already set, not checking IP");
+  else {
+    if (log_ips)
+      msg1("$RELAYCLIENT already set, not checking IP");
+  }
   execvp(argv[1], argv+1);
   die1(111, "execution of program failed!\n");
   return 111;
