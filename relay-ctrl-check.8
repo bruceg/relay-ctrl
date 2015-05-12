@@ -24,6 +24,8 @@ seconds old (which defaults to 900 or 15 minutes), then
 is set to the value of
 .I $RELAY_CTRL_RELAYCLIENT
 (which defaults to an empty string).
+The IP file is also parsed for environment variable settings which are exported to
+.BR program .
 Otherwise the IP file is removed and ignored.
 If
 .I $RELAY_CTRL_LOG_IPS
@@ -35,3 +37,7 @@ relay-ctrl-age(8),
 relay-ctrl-allow(8),
 qmail-smtpd(8),
 tcpserver(1)
+.SH CAVEATS
+.B relay-ctrl-check
+loads environment variables from the IP file using a large but fixed
+size buffer. Absurdly long variable settings will be silently ignored.
