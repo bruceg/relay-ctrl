@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "systime.h"
+#include <bglibs/systime.h>
 #include <unistd.h>
 #include <utime.h>
-#include "misc/misc.h"
-#include "msg/msg.h"
+#include <bglibs/misc.h>
+#include <bglibs/msg.h>
 #include "relay-ctrl.h"
 
 const char program[] = "relay-ctrl-allow";

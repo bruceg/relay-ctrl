@@ -1,10 +1,10 @@
-#include <sysdeps.h>
+#include <bglibs/sysdeps.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <net/ipv4.h>
-#include <net/socket.h>
-#include <msg/msg.h>
+#include <bglibs/ipv4.h>
+#include <bglibs/socket.h>
+#include <bglibs/msg.h>
 #include "relay-ctrl.h"
 
 const char program[] = "relay-ctrl-send";
@@ -35,7 +35,7 @@ static struct remote* parse_remotes(char* str)
     if ((nr = malloc(sizeof *nr)) == 0)
       die1(111, "Could not allocate remote structure.");
     nr->next = remotes;
-    if (!ipv4_parse(remote, &nr->addr, &remote))
+    if ((remote = ipv4_scan(remote, &nr->addr)) == 0)
       warn3("Could not parse IP '", remote, "'.");
     else {
       nr->rcvd = 0;

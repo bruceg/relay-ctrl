@@ -5,8 +5,8 @@
 #include <unistd.h>
 #include <utime.h>
 #include "relay-ctrl.h"
-#include "misc/misc.h"
-#include "msg/msg.h"
+#include <bglibs/misc.h>
+#include <bglibs/msg.h>
 
 static int cwd = -1;
 

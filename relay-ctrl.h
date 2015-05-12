@@ -1,7 +1,7 @@
 #ifndef RELAY_CTRL__H__
 #define RELAY_CTRL__H__
 
-#include <net/socket.h>
+#include <bglibs/socket.h>
 
 extern int is_authenticated(void);
 extern int touch(const char*);

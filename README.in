@@ -19,7 +19,7 @@ Development versions of @PACKAGE@ are available at:
 
 Requirements:
 
-- This package depends on bglibs version 1.100 or later.
+- This package depends on bglibs version 2.0 or later.
 - You must be using either qmail-popup/qmail-pop3d or pop3front
   with either tcpserver or tcp-env to serve POP3 OR
 - You must be using Courier IMAP to serve IMAP.

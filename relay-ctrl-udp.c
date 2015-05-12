@@ -1,11 +1,11 @@
-#include <sysdeps.h>
+#include <bglibs/sysdeps.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <msg/msg.h>
-#include <net/ipv4.h>
-#include <net/socket.h>
+#include <bglibs/msg.h>
+#include <bglibs/ipv4.h>
+#include <bglibs/socket.h>
 #include "relay-ctrl.h"
 
 const char program[] = "relay-ctrl-udp";

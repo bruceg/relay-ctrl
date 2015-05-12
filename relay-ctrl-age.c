@@ -1,9 +1,9 @@
-#include <sysdeps.h>
+#include <bglibs/sysdeps.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <systime.h>
-#include <msg/msg.h>
+#include <bglibs/systime.h>
+#include <bglibs/msg.h>
 
 const char program[] = "relay-ctrl-age";
 const int msg_show_pid = 0;

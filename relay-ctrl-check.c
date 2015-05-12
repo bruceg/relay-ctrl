@@ -1,12 +1,12 @@
-#include <sysdeps.h>
+#include <bglibs/sysdeps.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <msg/msg.h>
-#include <systime.h>
+#include <bglibs/msg.h>
+#include <bglibs/systime.h>
 #include "relay-ctrl.h"
 
 const char program[] = "relay-ctrl-check";
